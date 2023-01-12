@@ -2,14 +2,18 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://jfb-h.github.io/learning-julia/agenda.html</loc>
-    <lastmod>2023-01-12T15:42:46.173Z</lastmod>
+    <lastmod>2023-01-12T16:25:27.094Z</lastmod>
   </url>
   <url>
     <loc>https://jfb-h.github.io/learning-julia/index.html</loc>
-    <lastmod>2023-01-12T15:42:46.615Z</lastmod>
+    <lastmod>2023-01-12T16:25:27.514Z</lastmod>
+  </url>
+  <url>
+    <loc>https://jfb-h.github.io/learning-julia/pages/bayes/coinflip_ldp.html</loc>
+    <lastmod>2023-01-12T16:27:11.184Z</lastmod>
   </url>
   <url>
     <loc>https://jfb-h.github.io/learning-julia/pages/programming_recap.html</loc>
-    <lastmod>2023-01-12T15:43:04.022Z</lastmod>
+    <lastmod>2023-01-12T16:27:29.722Z</lastmod>
   </url>
 </urlset>
