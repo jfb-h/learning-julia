@@ -1,0 +1,143 @@
+---
+title: "Programming Basics"
+date: "01/13/2023"
+format:
+  html:
+    code-fold: true
+jupyter: julia-1.8
+---
+
+### Exercise 1
+
+**Task**: Write a function that takes in a name and prints out a greeting, e.g., "Hello, Daniel".
+
+
+```{julia}
+greet(name) = println("Hello, $(name)!")
+greet("Daniel")
+```
+
+
+### Exercise 2
+
+**Task**: Write a function which greets the users whose name starts with a 'D' in Spanish, users whose name starts with a 'C' in German, and everyone else in English. 
+
+
+```{julia}
+function greet(name)
+    firstletter = first(name)
+    if firstletter == 'D'
+        println("Hola, $(name)!")
+    elseif firstletter == 'C'
+        println("Hallo, $(name)!")
+    else
+        println("Hello, $(name)!")
+    end
+end
+
+greet("Denise")
+greet("Clara")
+greet("Marius")
+```
+
+### Exercise 3
+
+**Task**: Write a function which takes an array of numbers as input and returns their sum, without using the built-in function `sum`.
+
+
+```{julia}
+function mysum(arr)
+    res = zero(eltype(arr))
+    for x in arr
+        res += x
+    end
+    res
+end
+
+@show mysum([1,2,3,4,5]);
+```
+
+
+### Exercise 4
+
+**Task**: Write a function which takes an array of numbers as input and returns their sum of squares.
+
+
+```{julia}
+sum_of_squares(arr) = sum(x -> x^2, arr) 
+# or mapreduce(x -> x^2, +, arr)
+@show sum_of_squares([1,2,3])
+```
+
+### Exercise 5
+
+**Task**: Write a function which takes an array of numbers as input and returns the largest element.
+
+
+```{julia}
+largest_element(arr) = findmax(arr)[1]
+@show largest_element([5,2,1,7])
+```
+
+
+### Exercise 6
+
+**Task**: Write a function which takes an array of numbers as input and returns only those elements which are $>5$. In a second step, write a more generic version which takes the limit as a second argument.
+
+
+```{julia}
+greater_5(arr) = filter(>(5), arr)
+greater_k(arr, k) = filter(>(k), arr)
+
+@show greater_5([1,2,3,4,5,6,7,8]);
+@show greater_k([1,2,3,4,5,6,7,8], 2);
+```
+
+### Exercise 7
+
+**Task**: Write a function which checks if an element is contained in an array.
+
+
+```{julia}
+x_in_arr(x, arr) = x in arr
+
+@show x_in_arr("Daniel", ["Denise", "Daniel", "Jakob"]);
+```
+
+### Exercise 8
+
+Write a function which takes a Matrix as input and returns the column-wise sums. In a second step, write a more generic version which takes an arbitrary reduction function (such as sum) as an additional argument and performs it column-wise.
+
+
+```{julia}
+colsum(m) = sum(m; dims=1)
+colop(op, m) = map(op, eachcol(m))
+
+@show colsum([1 2; 3 4]);
+@show colop(sum, [1 2; 3 4]);
+```
+
+### Exercise 9
+
+Write a function that concatenates two arrays. In a second step, write a function which concatenates two $n$-element arrays into a $n \times 2$ matrix.
+
+```{julia}
+
+concatenate(a, b) = vcat(a, b)
+concatenate_matrix(a, b) = hcat(a, b)
+
+@show concatenate([1,2], [3,4,5])
+@show concatenate_matrix([1,2,3], [4,5,6]);
+```
+
+### Exercise 10
+
+Write a function that takes a number and returns a function which multiplies its input by that number. Apply the generated function to each element of an array of 5 randomly generated numbers.
+
+```{julia}
+
+generate_mul_by_k(k) = x -> x * k
+
+mul_by_3 = generate_mul_by_k(3)
+map(mul_by_3, rand(5))
+```

@@ -1,0 +1,6 @@
+---
+title: "Learning Julia"
+subtitle: "A self-learning course on Julia programming, statistics and everything else"
+---
+
+This website contains materials used in a self-organized learning endeavour that includes programming (primarily in the Julia language), statistics (primarily of the Bayesian kind) and all other things that are of interest to us (primarily network analysis and patent analytics).

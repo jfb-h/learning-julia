@@ -1,0 +1,50 @@
+---
+title: "Agenda"
+date: "01/13/2023"
+format: html
+---
+
+## Fundamentals
+- Programming basics recap
+- More Julia fundamentals
+    - type system
+    - multiple dispatch
+    - creating packages
+    - environments and project organization
+    - ...
+
+- Code organization and `git` / `github`
+
+#### References & Materials
+
+- The official [Julia documentation](https://docs.julialang.org/en/v1/)
+- The [Julia discourse forum](https://discourse.julialang.org/)
+- Youtube video on [developing Julia packages](https://www.youtube.com/watch?v=QVmU29rCjaA)
+- The [git](https://git-scm.com/doc) and [github](https://docs.github.com/en/get-started) documentation
+- Online [git tutorials](https://rogerdudler.github.io/git-guide/)
+
+## Data Science Toolkit
+- Tabular data and `DataFrames.jl`
+- Visualization and `Makie.jl`
+- Network analysis and `Graphs.jl`
+- Bayesian modeling and `Turing.jl`
+
+#### References & Materials
+
+- The docs: [`Makie.jl`](https://docs.makie.org/v0.19/),  [`DataFrames.jl`](https://dataframes.juliadata.org/stable/), [`Graphs.jl`](https://juliagraphs.org/Graphs.jl/dev/), [`Turing.jl`](https://turing.ml/stable/)
+- The [Julia Data Science](https://juliadatascience.io/) online book, containing many simple examples
+- The 2022 book [Julia for Data Analysis](https://www.manning.com/books/julia-for-data-analysis)
+- The 2022 book [Statistical Rethinking](https://xcelab.net/rm/statistical-rethinking/) and [Youtube lecture](https://www.youtube.com/watch?v=FdnMWdICdRs&t=42s) by Richard McElreath 
+- The 2020 book [Regression and Other Stories](https://avehtari.github.io/ROS-Examples/) by Andrew Gelman et al.
+
+## Project Topics
+- Main path analysis and `MainPaths.jl`
+- Patent analytics
+    - Data sources: [EPO PATSTAT](https://www.epo.org/searching-for-patents/business/patstat.html), [Lens.org](https://www.lens.org/)
+    - JuliaPatents: `PatentsBase.jl`, `PatentsLens.jl`, `PatentLandscapes.jl`
+- Survey analysis
+
+## Further Topics
+- Agent-based models and `Agents.jl`
+- Differential equation models and `DifferentialEquations.jl`
+

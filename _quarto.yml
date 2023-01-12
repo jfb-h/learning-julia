@@ -1,0 +1,29 @@
+project:
+  type: website
+format:
+  html:
+    theme: lux
+    #css: styles.css
+    toc: true
+website:
+  title: "Learning Julia"
+  sidebar:
+    style: "floating"
+    search: true
+    contents:
+      - href: agenda.qmd
+        text: "Agenda"
+      - section: "Programming basics"
+        contents:
+          - href: pages/programming_recap.qmd
+            text: "Exercises"
+      - section: "Julia fundamentals"
+        contents:
+      - section: "Tabular data"
+        contents:
+      - section: "Visualization"
+        contents:
+
+
+
+
