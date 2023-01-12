@@ -1,0 +1,44 @@
+[
+  {
+    "objectID": "agenda.html",
+    "href": "agenda.html",
+    "title": "Agenda",
+    "section": "",
+    "text": "Programming basics recap\nMore Julia fundamentals\n\ntype system\nmultiple dispatch\ncreating packages\nenvironments and project organization\n…\n\nCode organization and git / github\n\n\n\n\nThe official Julia documentation\nThe Julia discourse forum\nYoutube video on developing Julia packages\nThe git and github documentation\nOnline git tutorials"
+  },
+  {
+    "objectID": "agenda.html#data-science-toolkit",
+    "href": "agenda.html#data-science-toolkit",
+    "title": "Agenda",
+    "section": "Data Science Toolkit",
+    "text": "Data Science Toolkit\n\nTabular data and DataFrames.jl\nVisualization and Makie.jl\nNetwork analysis and Graphs.jl\nBayesian modeling and Turing.jl\n\n\nReferences & Materials\n\nThe docs: Makie.jl, DataFrames.jl, Graphs.jl, Turing.jl\nThe Julia Data Science online book, containing many simple examples\nThe 2022 book Julia for Data Analysis\nThe 2022 book Statistical Rethinking and Youtube lecture by Richard McElreath\nThe 2020 book Regression and Other Stories by Andrew Gelman et al."
+  },
+  {
+    "objectID": "agenda.html#project-topics",
+    "href": "agenda.html#project-topics",
+    "title": "Agenda",
+    "section": "Project Topics",
+    "text": "Project Topics\n\nMain path analysis and MainPaths.jl\nPatent analytics\n\nData sources: EPO PATSTAT, Lens.org\nJuliaPatents: PatentsBase.jl, PatentsLens.jl, PatentLandscapes.jl\n\nSurvey analysis"
+  },
+  {
+    "objectID": "agenda.html#further-topics",
+    "href": "agenda.html#further-topics",
+    "title": "Agenda",
+    "section": "Further Topics",
+    "text": "Further Topics\n\nAgent-based models and Agents.jl\nDifferential equation models and DifferentialEquations.jl"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Learning Julia",
+    "section": "",
+    "text": "This website contains materials used in a self-organized learning endeavour that includes programming (primarily in the Julia language), statistics (primarily of the Bayesian kind) and all other things that are of interest to us (primarily network analysis and patent analytics)."
+  },
+  {
+    "objectID": "pages/programming_recap.html",
+    "href": "pages/programming_recap.html",
+    "title": "Programming Basics",
+    "section": "",
+    "text": "Exercise 1\nTask: Write a function that takes in a name and prints out a greeting, e.g., “Hello, Daniel”.\n\n\nCode\ngreet(name) = println(\"Hello, $(name)!\")\ngreet(\"Daniel\")\n\n\nHello, Daniel!\n\n\n\n\nExercise 2\nTask: Write a function which greets the users whose name starts with a ‘D’ in Spanish, users whose name starts with a ‘C’ in German, and everyone else in English.\n\n\nCode\nfunction greet(name)\n    firstletter = first(name)\n    if firstletter == 'D'\n        println(\"Hola, $(name)!\")\n    elseif firstletter == 'C'\n        println(\"Hallo, $(name)!\")\n    else\n        println(\"Hello, $(name)!\")\n    end\nend\n\ngreet(\"Denise\")\ngreet(\"Clara\")\ngreet(\"Marius\")\n\n\nHola, Denise!\nHallo, Clara!\nHello, Marius!\n\n\n\n\nExercise 3\nTask: Write a function which takes an array of numbers as input and returns their sum, without using the built-in function sum.\n\n\nCode\nfunction mysum(arr)\n    res = zero(eltype(arr))\n    for x in arr\n        res += x\n    end\n    res\nend\n\n@show mysum([1,2,3,4,5]);\n\n\nmysum([1, 2, 3, 4, 5]) = 15\n\n\n\n\nExercise 4\nTask: Write a function which takes an array of numbers as input and returns their sum of squares.\n\n\nCode\nsum_of_squares(arr) = sum(x -> x^2, arr) \n# or mapreduce(x -> x^2, +, arr)\n@show sum_of_squares([1,2,3])\n\n\nsum_of_squares([1, 2, 3]) = 14\n\n\n\n\n\n14\n\n\n\n\nExercise 5\nTask: Write a function which takes an array of numbers as input and returns the largest element.\n\n\nCode\nlargest_element(arr) = findmax(arr)[1]\n@show largest_element([5,2,1,7])\n\n\nlargest_element([5, 2, 1, 7]) = 7\n\n\n7\n\n\n\n\nExercise 6\nTask: Write a function which takes an array of numbers as input and returns only those elements which are \\(>5\\). In a second step, write a more generic version which takes the limit as a second argument.\n\n\nCode\ngreater_5(arr) = filter(>(5), arr)\ngreater_k(arr, k) = filter(>(k), arr)\n\n@show greater_5([1,2,3,4,5,6,7,8]);\n@show greater_k([1,2,3,4,5,6,7,8], 2);\n\n\ngreater_5([1, 2, 3, 4, 5, 6, 7, 8]) = [6, 7, 8]\ngreater_k([1, 2, 3, 4, 5, 6, 7, 8], 2) = [3, 4, 5, 6, 7, 8]\n\n\n\n\nExercise 7\nTask: Write a function which checks if an element is contained in an array.\n\n\nCode\nx_in_arr(x, arr) = x in arr\n\n@show x_in_arr(\"Daniel\", [\"Denise\", \"Daniel\", \"Jakob\"]);\n\n\nx_in_arr(\"Daniel\", [\"Denise\", \"Daniel\", \"Jakob\"]) = true\n\n\n\n\nExercise 8\nWrite a function which takes a Matrix as input and returns the column-wise sums. In a second step, write a more generic version which takes an arbitrary reduction function (such as sum) as an additional argument and performs it column-wise.\n\n\nCode\ncolsum(m) = sum(m; dims=1)\ncolop(op, m) = map(op, eachcol(m))\n\n@show colsum([1 2; 3 4]);\n@show colop(sum, [1 2; 3 4]);\n\n\ncolsum([1 2; 3 4]) = [4 6]\n\n\n\ncolop(sum, [1 2; 3 4]) = [4, 6]\n\n\n\n\nExercise 9\nWrite a function that concatenates two arrays. In a second step, write a function which concatenates two \\(n\\)-element arrays into a \\(n \\times 2\\) matrix.\n\n\nCode\nconcatenate(a, b) = vcat(a, b)\nconcatenate_matrix(a, b) = hcat(a, b)\n\n@show concatenate([1,2], [3,4,5])\n@show concatenate_matrix([1,2,3], [4,5,6]);\n\n\nconcatenate([1, 2], [3, 4, 5]) = [1, 2, 3, 4, 5]\n\n\n\nconcatenate_matrix([1, 2, 3], [4, 5, 6]) = [1 4; 2 5; 3 6]\n\n\n\n\nExercise 10\nWrite a function that takes a number and returns a function which multiplies its input by that number. Apply the generated function to each element of an array of 5 randomly generated numbers.\n\n\nCode\ngenerate_mul_by_k(k) = x -> x * k\n\nmul_by_3 = generate_mul_by_k(3)\nmap(mul_by_3, rand(5))\n\n\n5-element Vector{Float64}:\n 1.653127990558927\n 1.9911674601542966\n 0.30415945935235555\n 2.310750696549797\n 0.20438754116850866"
+  }
+]
