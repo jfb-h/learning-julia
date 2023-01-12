@@ -353,10 +353,8 @@ Hello, Marius!</code></pre>
 <span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="pp">@show</span> <span class="fu">greater_k</span>([<span class="fl">1</span>,<span class="fl">2</span>,<span class="fl">3</span>,<span class="fl">4</span>,<span class="fl">5</span>,<span class="fl">6</span>,<span class="fl">7</span>,<span class="fl">8</span>], <span class="fl">2</span>);</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>greater_5([1, 2, 3, 4, 5, 6, 7, 8]) = [6, 7, 8]</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>greater_k([1, 2, 3, 4, 5, 6, 7, 8], 2) = [3, 4, 5, 6, 7, 8]</code></pre>
+<pre><code>greater_5([1, 2, 3, 4, 5, 6, 7, 8]) = [6, 7, 8]
+greater_k([1, 2, 3, 4, 5, 6, 7, 8], 2) = [3, 4, 5, 6, 7, 8]</code></pre>
 </div>
 </div>
 </section>
@@ -366,9 +364,9 @@ Hello, Marius!</code></pre>
 <div class="cell" data-execution_count="7">
 <details>
 <summary>Solution</summary>
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">x_in_arr</span>(x, arr) <span class="op">=</span> x <span class="kw">in</span> arr</span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="pp">@show</span> <span class="fu">x_in_arr</span>(<span class="st">"Daniel"</span>, [<span class="st">"Denise"</span>, <span class="st">"Daniel"</span>, <span class="st">"Jakob"</span>]);</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">x_in_arr</span>(x, arr) <span class="op">=</span> x <span class="kw">in</span> arr</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="pp">@show</span> <span class="fu">x_in_arr</span>(<span class="st">"Daniel"</span>, [<span class="st">"Denise"</span>, <span class="st">"Daniel"</span>, <span class="st">"Jakob"</span>]);</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>x_in_arr("Daniel", ["Denise", "Daniel", "Jakob"]) = true</code></pre>
@@ -381,17 +379,18 @@ Hello, Marius!</code></pre>
 <div class="cell" data-execution_count="8">
 <details>
 <summary>Solution</summary>
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">colsum</span>(m) <span class="op">=</span> <span class="fu">sum</span>(m; dims<span class="op">=</span><span class="fl">1</span>)</span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">colop</span>(op, m) <span class="op">=</span> <span class="fu">map</span>(op, <span class="fu">eachcol</span>(m))</span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="pp">@show</span> <span class="fu">colsum</span>([<span class="fl">1</span> <span class="fl">2</span>; <span class="fl">3</span> <span class="fl">4</span>]);</span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="pp">@show</span> <span class="fu">colop</span>(sum, [<span class="fl">1</span> <span class="fl">2</span>; <span class="fl">3</span> <span class="fl">4</span>]);</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">colsum</span>(m) <span class="op">=</span> <span class="fu">sum</span>(m; dims<span class="op">=</span><span class="fl">1</span>)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">colop</span>(op, m) <span class="op">=</span> <span class="fu">map</span>(op, <span class="fu">eachcol</span>(m))</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="pp">@show</span> <span class="fu">colsum</span>([<span class="fl">1</span> <span class="fl">2</span>; <span class="fl">3</span> <span class="fl">4</span>]);</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="pp">@show</span> <span class="fu">colop</span>(sum, [<span class="fl">1</span> <span class="fl">2</span>; <span class="fl">3</span> <span class="fl">4</span>]);</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>colsum([1 2; 3 4]) = [4 6]</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>colop(sum, [1 2; 3 4]) = [4, 6]</code></pre>
+<pre><code>
+colop(sum, [1 2; 3 4]) = [4, 6]</code></pre>
 </div>
 </div>
 </section>
@@ -401,11 +400,11 @@ Hello, Marius!</code></pre>
 <div class="cell" data-execution_count="9">
 <details>
 <summary>Solution</summary>
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">concatenate</span>(a, b) <span class="op">=</span> <span class="fu">vcat</span>(a, b)</span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="fu">concatenate_matrix</span>(a, b) <span class="op">=</span> <span class="fu">hcat</span>(a, b)</span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="pp">@show</span> <span class="fu">concatenate</span>([<span class="fl">1</span>,<span class="fl">2</span>], [<span class="fl">3</span>,<span class="fl">4</span>,<span class="fl">5</span>]);</span>
-<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="pp">@show</span> <span class="fu">concatenate_matrix</span>([<span class="fl">1</span>,<span class="fl">2</span>,<span class="fl">3</span>], [<span class="fl">4</span>,<span class="fl">5</span>,<span class="fl">6</span>]);</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">concatenate</span>(a, b) <span class="op">=</span> <span class="fu">vcat</span>(a, b)</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">concatenate_matrix</span>(a, b) <span class="op">=</span> <span class="fu">hcat</span>(a, b)</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="pp">@show</span> <span class="fu">concatenate</span>([<span class="fl">1</span>,<span class="fl">2</span>], [<span class="fl">3</span>,<span class="fl">4</span>,<span class="fl">5</span>]);</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="pp">@show</span> <span class="fu">concatenate_matrix</span>([<span class="fl">1</span>,<span class="fl">2</span>,<span class="fl">3</span>], [<span class="fl">4</span>,<span class="fl">5</span>,<span class="fl">6</span>]);</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>concatenate([1, 2], [3, 4, 5]) = [1, 2, 3, 4, 5]</code></pre>
@@ -422,18 +421,18 @@ concatenate_matrix([1, 2, 3], [4, 5, 6]) = [1 4; 2 5; 3 6]</code></pre>
 <div class="cell" data-execution_count="10">
 <details>
 <summary>Solution</summary>
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">generate_mul_by_k</span>(k) <span class="op">=</span> x <span class="op">-&gt;</span> x <span class="op">*</span> k</span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>mul_by_3 <span class="op">=</span> <span class="fu">generate_mul_by_k</span>(<span class="fl">3</span>)</span>
-<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="fu">map</span>(mul_by_3, <span class="fu">rand</span>(<span class="fl">5</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">generate_mul_by_k</span>(k) <span class="op">=</span> x <span class="op">-&gt;</span> x <span class="op">*</span> k</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>mul_by_3 <span class="op">=</span> <span class="fu">generate_mul_by_k</span>(<span class="fl">3</span>)</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="fu">map</span>(mul_by_3, <span class="fu">rand</span>(<span class="fl">5</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-display" data-execution_count="11">
 <pre><code>5-element Vector{Float64}:
- 0.6346073522615003
- 2.5538141296435017
- 0.4758717633091474
- 0.39251029591674325
- 2.79126913702369</code></pre>
+ 0.12059555786906628
+ 2.22589973578987
+ 2.5553242384008437
+ 2.004326779421378
+ 1.7788294964100002</code></pre>
 </div>
 </div>
 
