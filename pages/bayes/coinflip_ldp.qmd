@@ -45,7 +45,7 @@ Having simulated data for inference, we now proceed to the model definition usin
 the `LogDensityProblems` interface package.
 As we assume that the individual coinflips are independent from one another,
 the exact sequence of flips is irrelevant and we just need to store the total
-number of flips and the number of heads, which we call $y$. We store this
+number of flips, $N$, and the number of heads, which we call $y$. We store this
 information in a struct called `CoinflipProblem`, for which we also create a
 constructor that extracts the necessary information from a sequence of flips.
 
@@ -73,9 +73,9 @@ plot(Beta(2,2))
 
 
 ```{julia}
-function (problem::CoinflipProblem)(theta)
+function (problem::CoinflipProblem)(θ)
   (; N, y) = problem
-  (; p) = theta
+  (; p) = θ
   logprior = logpdf(Beta(2,2), p)
   loglikelihood = logpdf(Binomial(N, p), y)
   logprior + loglikelihood
