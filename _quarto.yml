@@ -21,8 +21,12 @@ website:
         contents:
       - section: "Tabular data"
         contents:
-      - section: "Visualization"
+      - section: "Data visualization"
         contents:
+      - section: "Bayesian modeling"
+        contents: 
+          - href: pages/bayes/coinflip_ldp.qmd
+            text: "Simple coinflip model"
 
 
 

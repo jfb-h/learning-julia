@@ -4,6 +4,7 @@ date: "01/13/2023"
 format:
   html:
     code-fold: true
+    code-summary: "Solution"
 jupyter: julia-1.8
 ---
 
@@ -66,7 +67,7 @@ end
 ```{julia}
 sum_of_squares(arr) = sum(x -> x^2, arr) 
 # or mapreduce(x -> x^2, +, arr)
-@show sum_of_squares([1,2,3])
+@show sum_of_squares([1,2,3]);
 ```
 
 ### Exercise 5
@@ -76,7 +77,7 @@ sum_of_squares(arr) = sum(x -> x^2, arr)
 
 ```{julia}
 largest_element(arr) = findmax(arr)[1]
-@show largest_element([5,2,1,7])
+@show largest_element([5,2,1,7]);
 ```
 
 
@@ -126,7 +127,7 @@ Write a function that concatenates two arrays. In a second step, write a functio
 concatenate(a, b) = vcat(a, b)
 concatenate_matrix(a, b) = hcat(a, b)
 
-@show concatenate([1,2], [3,4,5])
+@show concatenate([1,2], [3,4,5]);
 @show concatenate_matrix([1,2,3], [4,5,6]);
 ```
 

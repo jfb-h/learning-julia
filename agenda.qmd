@@ -27,15 +27,25 @@ format: html
 - Tabular data and `DataFrames.jl`
 - Visualization and `Makie.jl`
 - Network analysis and `Graphs.jl`
-- Bayesian modeling and `Turing.jl`
 
 #### References & Materials
 
 - The docs: [`Makie.jl`](https://docs.makie.org/v0.19/),  [`DataFrames.jl`](https://dataframes.juliadata.org/stable/), [`Graphs.jl`](https://juliagraphs.org/Graphs.jl/dev/), [`Turing.jl`](https://turing.ml/stable/)
+- The [beautiful Makie](https://beautiful.makie.org/dev/) website, with many nice plotting examples
 - The [Julia Data Science](https://juliadatascience.io/) online book, containing many simple examples
 - The 2022 book [Julia for Data Analysis](https://www.manning.com/books/julia-for-data-analysis)
+- The [blog of Bogumli Kaminski](https://bkamins.github.io/), author of the `DataFrames.jl` package
+
+## Bayesian Modeling
+
+- Probabilistic programming with `Turing.jl`
+- Probabilistic programming with `stan`
+- Low-level interface with `LogDensityProblems.jl`, `TransformVariables.jl` and `DynamicHMC.jl`
+
+#### References & Materials
 - The 2022 book [Statistical Rethinking](https://xcelab.net/rm/statistical-rethinking/) and [Youtube lecture](https://www.youtube.com/watch?v=FdnMWdICdRs&t=42s) by Richard McElreath 
 - The 2020 book [Regression and Other Stories](https://avehtari.github.io/ROS-Examples/) by Andrew Gelman et al.
+- The excellent [stan documentation](https://mc-stan.org/)
 
 ## Project Topics
 - Main path analysis and `MainPaths.jl`
