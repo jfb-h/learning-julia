@@ -10,7 +10,7 @@ jupyter: julia-1.8
 
 ### Exercise 1
 
-**Task**: Write a function that takes in a name and prints out a greeting, e.g., "Hello, Daniel".
+Write a function that takes in a name and prints out a greeting, e.g., "Hello, Daniel".
 
 
 ```{julia}
@@ -21,7 +21,7 @@ greet("Daniel")
 
 ### Exercise 2
 
-**Task**: Write a function which greets the users whose name starts with a 'D' in Spanish, users whose name starts with a 'C' in German, and everyone else in English. 
+Write a function which greets the users whose name starts with a 'D' in Spanish, users whose name starts with a 'C' in German, and everyone else in English. 
 
 
 ```{julia}
@@ -43,7 +43,7 @@ greet("Marius")
 
 ### Exercise 3
 
-**Task**: Write a function which takes an array of numbers as input and returns their sum, without using the built-in function `sum`.
+Write a function which takes an array of numbers as input and returns their sum, without using the built-in function `sum`.
 
 
 ```{julia}
@@ -61,7 +61,7 @@ end
 
 ### Exercise 4
 
-**Task**: Write a function which takes an array of numbers as input and returns their sum of squares.
+Write a function which takes an array of numbers as input and returns their sum of squares.
 
 
 ```{julia}
@@ -72,7 +72,7 @@ sum_of_squares(arr) = sum(x -> x^2, arr)
 
 ### Exercise 5
 
-**Task**: Write a function which takes an array of numbers as input and returns the largest element.
+Write a function which takes an array of numbers as input and returns the largest element.
 
 
 ```{julia}
@@ -83,7 +83,7 @@ largest_element(arr) = findmax(arr)[1]
 
 ### Exercise 6
 
-**Task**: Write a function which takes an array of numbers as input and returns only those elements which are $>5$. In a second step, write a more generic version which takes the limit as a second argument.
+Write a function which takes an array of numbers as input and returns only those elements which are $>5$. In a second step, write a more generic version which takes the limit as a second argument.
 
 
 ```{julia}
@@ -96,7 +96,7 @@ greater_k(arr, k) = filter(>(k), arr)
 
 ### Exercise 7
 
-**Task**: Write a function which checks if an element is contained in an array.
+Write a function which checks if an element is contained in an array.
 
 
 ```{julia}

@@ -7,16 +7,13 @@ format: html
 ## Fundamentals
 - Programming basics recap
 - More Julia fundamentals
-    - type system
-    - multiple dispatch
-    - creating packages
-    - environments and project organization
-    - ...
+    - The type system & multiple dispatch
+    - Packages, environments and project organization
+    - Performance optimization
 
 - Code organization and `git` / `github`
 
-#### References & Materials
-
+##### References & Materials
 - The official [Julia documentation](https://docs.julialang.org/en/v1/)
 - The [Julia discourse forum](https://discourse.julialang.org/)
 - Youtube video on [developing Julia packages](https://www.youtube.com/watch?v=QVmU29rCjaA)
@@ -28,30 +25,28 @@ format: html
 - Visualization and `Makie.jl`
 - Network analysis and `Graphs.jl`
 
-#### References & Materials
-
-- The docs: [`Makie.jl`](https://docs.makie.org/v0.19/),  [`DataFrames.jl`](https://dataframes.juliadata.org/stable/), [`Graphs.jl`](https://juliagraphs.org/Graphs.jl/dev/), [`Turing.jl`](https://turing.ml/stable/)
-- The [beautiful Makie](https://beautiful.makie.org/dev/) website, with many nice plotting examples
+##### References & Materials
+- The docs: [`Makie.jl`](https://docs.makie.org/v0.19/),  [`DataFrames.jl`](https://dataframes.juliadata.org/stable/), [`Graphs.jl`](https://juliagraphs.org/Graphs.jl/dev/)
+- The [Beautiful Makie](https://beautiful.makie.org/dev/) website, with many nice plotting examples
 - The [Julia Data Science](https://juliadatascience.io/) online book, containing many simple examples
 - The 2022 book [Julia for Data Analysis](https://www.manning.com/books/julia-for-data-analysis)
 - The [blog of Bogumli Kaminski](https://bkamins.github.io/), author of the `DataFrames.jl` package
 
 ## Bayesian Modeling
-
 - Probabilistic programming with `Turing.jl`
-- Probabilistic programming with `stan`
+- Probabilistic programming with `Stan`
 - Low-level interface with `LogDensityProblems.jl`, `TransformVariables.jl` and `DynamicHMC.jl`
 
-#### References & Materials
-- The 2022 book [Statistical Rethinking](https://xcelab.net/rm/statistical-rethinking/) and [Youtube lecture](https://www.youtube.com/watch?v=FdnMWdICdRs&t=42s) by Richard McElreath 
-- The 2020 book [Regression and Other Stories](https://avehtari.github.io/ROS-Examples/) by Andrew Gelman et al.
-- The excellent [stan documentation](https://mc-stan.org/)
+##### References & Materials
+- The book [Statistical Rethinking](https://xcelab.net/rm/statistical-rethinking/) and [Youtube lecture](https://www.youtube.com/watch?v=FdnMWdICdRs&t=42s) by Richard McElreath 
+- The book [Regression and Other Stories](https://avehtari.github.io/ROS-Examples/) by Andrew Gelman et al.
+- The excellent [Stan documentation](https://mc-stan.org/)
 
 ## Project Topics
 - Main path analysis and `MainPaths.jl`
 - Patent analytics
+    - JuliaPatents: `PatentsBase.jl`, `PatentsLens.jl`, `PatentsLandscapes.jl`
     - Data sources: [EPO PATSTAT](https://www.epo.org/searching-for-patents/business/patstat.html), [Lens.org](https://www.lens.org/)
-    - JuliaPatents: `PatentsBase.jl`, `PatentsLens.jl`, `PatentLandscapes.jl`
 - Survey analysis
 
 ## Further Topics
