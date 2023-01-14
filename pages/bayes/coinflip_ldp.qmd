@@ -8,7 +8,7 @@ jupyter: julia-1.8
 
 ## About this tutorial
 
-This is a tutorial on how to use the `LogDensityProblems.jl` ecosystem for Bayesian inference. Compared to other packages, such as `Turing.jl`, this approach is a bit more low-level, with the upside of being more hackable and insightful for learning.
+This is a tutorial on how to use the `LogDensityProblems.jl` ecosystem for Bayesian inference. Compared to other packages, such as `Turing.jl`, this approach is a bit more low-level, with the upside of being more hackable and being insightful for learning purposes.
 
 ```{julia}
 #| echo: false
@@ -22,7 +22,7 @@ Pkg.activate(".", io=devnull);
 For this exercise, we're interested in performing inference on a simple process where a possibly biased coin is flipped $N=100$ times. More formally, we could state this like so:
 
 $$
-y_i \sim \mathrm{Bernoulli}(p) \textrm{ for } i = 1,2,...100
+y_i \sim \mathrm{Bernoulli}(p) \textrm{ for } i = 1,2,...,100
 $$
 
 We start by simulating data from a Bernoulli distribution with the probability of heads set to $p = 0.7$,  which for the inverse problem is going to be the unknown quantity of interest to be inferred from observed data.
@@ -41,47 +41,68 @@ data = rand(d, N);
 
 ## Model definition
 
-Having simulated data for inference, we now proceed to the model definition using the `LogDensityProblems` interface package. As we assume that the individual coinflips are independent from one another, the exact sequence of flips is irrelevant and we just need to store the total number of flips, $N$, and the number of heads, which we call $y$. We store this information in a struct called `CoinflipProblem`, for which we also create a constructor that extracts the necessary information from a sequence of flips.
+Having simulated data for inference, we now proceed to the model definition using the `LogDensityProblems` interface package. We store the flips in a struct called `CoinflipProblem`:
 
 ```{julia}
 struct CoinflipProblem
-  N::Int
-  y::Int
-end
-
-function CoinflipProblem(data::AbstractVector{Bool})
-  N, y = length(data), sum(data)
-  CoinflipProblem(N, y)
+  flips::Vector{Bool}
 end;
 ```
-We now make our problem struct callable on an input parameter $\theta$ at which to evaluate the (unnormalized) log joint probability density of the posterior distribution. Next to the likelihood function which makes use of the information from the data, we also need to specify a prior distribution for the unknown quantities. Here, we're going to be broadly  skeptical of extremely biased coins and use a $Beta(2,2)$ prior:
+
+*Note*: The avid reader will notice that this problem could also be more efficiently represented by making use of independence between the flips, in which case we could just record the total number of flips and the number of heads and make use of the binomial distribution. However, for sake of consistency we here stick to the Bernoulli representation.
+
+The centerpiece of most modern Bayesian inference methods is the (unnormalized, log) probability density function of the posterior distribution, which indicates how well a given parameter value fits the evidence provided by our data (encoded in the loglikelihood function) and our prior beliefs. For our numerical estimation procedure, it guides our search of the parameter space to obtain a representative set of draws from the posterior distribution.
+
+We start by specifying the loglikelihood function:
+
+```{julia}
+function loglik(p::Real, flips::Vector{Bool})
+  sum(y -> logpdf(Bernoulli(p), y), flips)
+end;
+```
+
+For a given value $p$, the loglikelihood function gives us the sum of the log probability densities of each of our flips under a $\textrm{Bernoulli}(p)$ distribution.
+
+Next to the likelihood function which makes use of the information from the data, we also need to specify a prior distribution which encodes our prior (before having seen the data) belief about $p$. Here, we're going to be broadly skeptical of extremely biased coins and use a $\mathrm{Beta}(2,2)$ prior:
+
+```{julia}
+function logpri(p::Real)
+  logpdf(Beta(2,2), p)
+end;
+```
+
+Here's a plot of what that looks like:
 
 ```{julia}
 using CairoMakie
 plot(Beta(2,2))
 ```
 
+We now make our problem struct callable on an input parameter $\theta$, which is just a 'container' holding our actual parameter of interest, $p$, but could also contain other parameters. Calling the struct on a given $\theta$ returns the sum of the log density of the prior and the log likelihood, a.k.a. the log posterior density evaluated at $p$.
 
 ```{julia}
 function (problem::CoinflipProblem)(θ)
-  (; N, y) = problem
+  (; flips) = problem
   (; p) = θ
-  logprior = logpdf(Beta(2,2), p)
-  loglikelihood = logpdf(Binomial(N, p), y)
-  logprior + loglikelihood
+  logpri(p) + loglik(p, flips)
 end  
 ```
 
-We can now instantiate our problem on the data and evaluate the joint logdensity of a fair coinflip with $p = 0.5$:
+We can now instantiate our problem on the data and evaluate the log posterior density at a couple of values for $p$:
 
 ```{julia}
 problem = CoinflipProblem(data)
-problem((; p=0.5))
+problem((; p=0.1)), problem((; p=0.5)), problem((; p=0.9))
 ```
 
+While the actual values of the log posterior density are not immediately that useful, we can already infer that, given the data and our prior beliefs, $p=0.5$ is deemed similarly likely compared to $p=0.9$ and much more likely than $p=0.1$.
+
 ## Model estimation
-Having defined a way to evaluate the posterior density for a given parameter value, we now proceed to set up a sampling-based numeric estimation procedure via Hamiltonian Monte Carlo (HMC) using the `LogDensityProblems` suite of packages. HMC operates on the unconstrained reals but our parameter $p$ is confined to the unit interval $(0,1)$ so we
-need an appropriate transformation, which is conveniently available in the `TransformedLogDensity` package. HMC furthermore requires the gradient of the posterior density, which we get with an automatic differentiation package, in this case `ForwardDiff`.
+Having defined a way to evaluate the posterior density for a given parameter value, we now want a full representation of the posterior distribution to draw conclusions about the coin. While for simple problems, like the one presented here, a closed-form analytical solution is available, a more general method which also works for complicated models is to draw a large number of samples from the posterior distribution. Based on these samples, one can easily derive statements about certain summaries of the posterior distribution (e.g., its mean and standard deviation) or visualize it.
+
+A general purpose numerical procedure for obtaining samples from the posterior distribution, using the unnormalized log posterior density function (as specified above) and its gradient, is Hamiltonian Monte Carlo (HMC) and its variants. 
+
+As more of an implementation detail, HMC operates on the unconstrained reals but our parameter $p$ is confined to the unit interval $(0,1)$ so we need an appropriate transformation, which is conveniently available in the `TransformedLogDensities` package. As mentioned, HMC furthermore requires the gradient of the posterior density, which we can conveniently obtain via automatic differentiation, in this case using the `ForwardDiff` package.
 
 ```{julia}
 using LogDensityProblems
@@ -100,7 +121,7 @@ We can now evaluate the logdensity and its gradient:
 LogDensityProblems.logdensity_and_gradient(grad, zeros(1))
 ```
 
-With this in place, we can now draw a large number of samples (say, $S=2000$) from the posterior  distribution using the HMC implementation in `DynamicHMC` as an approximation. We use the `ThreadsX` package to sample $k$ chains in parallel:
+With this in place, we can now draw a large number of samples (say, $S=2000$) from the posterior distribution using the HMC implementation in `DynamicHMC`. We use the `ThreadsX` package to sample $k$ chains in parallel:
 
 ```{julia}
 using Random
@@ -122,14 +143,14 @@ The `result` is a vector of length $k$, each element of which contains for each 
 
 Having obtained samples from the posterior distribution, we're in principle ready to use our model for inference, i.e., answer the question of whether our coin is biased and by how much, and how certain we can be of the answer based on the data we have seen.
 
-However, before we jump to inference, it is good practice to perform some model checks: Our estimates rely on a numerical sampling scheme, which can fail rendering the results unreliable. 
+However, before we jump to inference, it is good practice to perform some model checks: Our estimates rely on a numerical sampling scheme, which can fail, rendering the results unreliable. 
 
 ```{julia}
 using MCMCDiagnosticTools
 using DynamicHMC.Diagnostics
 ```
 
-First, we chan check the effective sample size (ess). In Markov chain monte carlo (MCMC) approaches, samples are often correlated, meaning that the total number of 'effective' samples is less than obtained by an uncorrelated sampling procedure.
+First, we can check the effective sample size (ess). In Markov chain monte carlo (MCMC) approaches, samples are often correlated, meaning that the total number of 'effective' samples is less than obtained by an uncorrelated sampling procedure because consecutive samples carry some of the same information.
 
 ```{julia}
 ess, Rhat =  ess_rhat(stack_posterior_matrices(result))
