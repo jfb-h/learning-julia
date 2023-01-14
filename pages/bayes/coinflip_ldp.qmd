@@ -51,7 +51,7 @@ end;
 
 *Note*: The avid reader will notice that this problem could also be more efficiently represented by making use of independence between the flips, in which case we could just record the total number of flips and the number of heads and make use of the binomial distribution. However, for sake of consistency we here stick to the Bernoulli representation.
 
-The centerpiece of most modern Bayesian inference methods is the (unnormalized, log) probability density function of the posterior distribution, which indicates how well a given parameter value fits the evidence provided by our data (encoded in the loglikelihood function) and our prior beliefs. For our numerical estimation procedure, it guides our search of the parameter space to obtain a representative set of draws from the posterior distribution.
+The centerpiece of most modern Bayesian inference methods is the unnormalized log probability density function of the posterior distribution, which indicates how well a given parameter value fits the evidence provided by our data (encoded in the loglikelihood function) and our prior beliefs. For our numerical estimation procedure, it guides our search of the parameter space to obtain a representative set of draws from the posterior distribution.
 
 We start by specifying the loglikelihood function:
 
