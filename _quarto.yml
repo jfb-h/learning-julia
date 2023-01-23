@@ -29,8 +29,8 @@ website:
             text: "Simple coinflip model"
       - section: "Statistical rethinking"
         contents: 
-        - href: pages/statistical-rethinking/globe_tossing.qmd
-          text: "Globe tossing"
+        - href: pages/statistical-rethinking/week1.qmd
+          text: "Week 1"
 
 
 
