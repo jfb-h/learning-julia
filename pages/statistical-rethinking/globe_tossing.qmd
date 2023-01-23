@@ -1,0 +1,160 @@
+---
+title: "Statistical Rethinking"
+subtitle: "Week 1"
+author: "Jakob Hoffmann"
+date: "01/01/2023"
+format: html
+jupyter: julia-1.8
+---
+
+# Week 1 review
+
+## Lecture
+
+```{julia}
+#| echo: false
+Pkg.activate(".", io=devnull);
+```
+
+```{julia}
+using DataFrames
+
+function compute_posterior(throws, poss=[0, 0.25, 0.5, 0.75, 1.0])
+    W = count(==("W"), throws)
+    L = count(==("L"), throws)
+    ways = map(q -> (4q)^W * (4(1-q))^L, poss)
+    post = ways ./ sum(ways)
+    DataFrame(poss=poss, ways=ways, post=round.(post; digits=3))
+end;
+```
+
+```{julia}
+throws = ["W", "L", "W", "W", "L"]
+compute_posterior(throws)
+```
+
+## Book and Additional Materials
+
+### Bayesian Inference and Bayes Rule
+
+Bayesian inference departs from a model for the joint distribution of all observed variables (data, $\mathcal{D}$) and unobserved variables (parameters, $\theta$): 
+
+$$ p(\theta, \mathcal{D}) = p(\mathcal{D}|\theta)p(\theta) $$
+
+The factorization on the right hand side is a direct consequence of the definition of conditional probability (see box below).
+
+ Bayesian inference then relies on Bayes' rule (from which it derives its name) to derive the posterior distribution of parameters $\theta$ conditional on observed data $\mathcal{D}$:
+
+$$
+p(\theta | \mathcal{D}) = \frac{p(\mathcal{D}|\theta)p(\theta)}{p({\mathcal{D}})}
+$$
+
+> Bayes Rule is just a restatement of the general definition of conditional probability:
+> 
+> $$\mathrm{Pr}(A|B) := \frac{\mathrm{Pr}(A,B)}{\mathrm{Pr}(B)}$$
+> 
+> The numerator here is the joint probability, i.e. the probability that both $A$ and $B$ occur. The joint probability is also sometimes written as $p(A \cap B)$ (an intersection in set notation) and is symmetric with respect to its arguments:
+> $$\mathrm{Pr}(A,B) = \mathrm{Pr}(A|B)\mathrm{Pr}(B) = \mathrm{Pr}(B|A)\mathrm{Pr}(A)$$
+> If we now replace the joint probability by the its conditioned representation in the definition above, we arive at Bayes Rule:
+> $$\mathrm{Pr}(A|B) = \frac{\mathrm{Pr}(B|A)\mathrm{Pr}(A)}{\mathrm{Pr}(B)}$$
+
+In the context of Bayes' rule, $p(\mathcal{D}|\theta)$ (taken as a function of $\theta$ and not $\mathcal{D}$) is called the *likelihood* and specifies how the data influence our inferences. $p(\theta)$ is called the *prior* and formalizes our beliefs on the parameters before having seen the data.
+
+### Globe Tossing
+
+#### Simulating the Data Generating Process
+
+```{julia}
+using StatsBase
+
+function simulate_globe(p, N) 
+    outcomes = ["W", "L"]
+    probabilities = [p, 1-p]
+    sample(outcomes, Weights(probabilities), N)
+end
+
+sim_globe(0.75, 5)
+```
+
+#### The Beta-Binomial Model
+
+Following the general process of Bayesian inference outlined above, we need a representation of the joint distribution of known and unknown variables, which we can factor into two components: (1) a sampling distribution that describes how the known variables are generated for given values of the unknowns and (2) a prior distribution over the unknowns.
+
+*Sampling distribution.* The data generating process for the globe tossing example is well represented by a binomial sampling model, which specifies a distribution for the number of 'successes' (called $y$, say occurrences of water) among a number of $N$ trials, each with the same success probability $p$. To indicate that the random variable $y$ follows a binomial distribution, we write: 
+
+$$ y \sim \mathrm{Binomial}(N, p)$$
+
+Computing the probability of an observed number of successes $y$ for a given $p$ is then given by the probability mass function of the binomial distribution:
+
+$$ \mathrm{Binomial}(y | N, p) = {N \choose y} p^y (1-p)^{N-y},$$
+
+where ${N \choose y} = \frac{N!}{y!(N-y)!}$ is called the binomial coefficient. In the context of the posterior distriution, where the right hand side of the above serves as the likelihood and is taken as a function of $p$, the binomial coefficient is constant (because it does not depend on $p$), which is helpful in analytical derivations.
+
+Here is a plot of the binomial distribution for different values of $p$, with $N=50$:
+
+```{julia}
+using Distributions, CairoMakie
+
+function plotbinom(params)
+    tostring(p) = "Binomial(50, $(p.p))"
+    fig = Figure()
+    ax = Axis(fig[1,1])
+    foreach(params) do p
+        d = Binomial(50, p.p)
+        barplot!(ax, d; cycle=:color, label=tostring(p))
+    end
+    axislegend(ax; position=(:left, :top))
+    fig
+end
+
+params = [(;p=0.1), (;p=0.5), (;p=0.9)]
+plotbinom(params)
+```
+
+*Prior distribution.* A natural prior for the parameter $p$ is the beta distribution, which is defined for the interval $[0,1]$ and thus fits the bounds of $p$ (which represents a proportion). The distribution has two paramteres, commonly called $\alpha$ and $\beta$, which control its shape. 
+
+The probability density function for the beta is given by:
+
+$$
+\textrm{Beta}(p | \alpha, \beta) = \frac{\Gamma(\alpha + \beta)}{\Gamma(\alpha)\Gamma(\beta)}p^{\alpha - 1} (1-p)^{\beta - 1}
+$$
+
+The factor involving the gamma functions $\Gamma(\cdot)$ is a normalizing constant ensuring that the pdf integrates to 1 over the sample space. Here is a plot of the pdf with different values for $\alpha$ and $\beta$:
+
+```{julia}
+function plotbeta(params)
+    tostring(p) = "Beta($(p.α), $(p.β))"
+    fig = Figure()
+    ax = Axis(fig[1,1])
+    foreach(params) do p
+        d = Beta(p...)
+        plot!(ax, d; cycle=:color, label=tostring(p))
+    end
+    axislegend(ax; position=(:left, :top))
+    fig
+end
+
+params = [(;α=1, β=1), (;α=2, β=2), (;α=3, β=2)]
+plotbeta(params)
+```
+
+*Posterior distribution*. The posterior distribtution is proportional to the prior times the likelihood (which is just the factored joint distribution):
+
+$$
+p(\theta|\mathcal{D}) \propto p(\mathcal{D}|\theta)p(\theta)
+$$
+
+ For many analytical and numerical procedures the normalizing constant $p(\mathcal{D}$) can be dropped. We here also make use of this fact to analytically derive the closed form posterior distribution. This is not generally possible, which is why numerical applications are so important in Bayesian inference.
+
+
+
+#### Grid Approximation
+
+
+
+
+# Week 1 homework
+
+## Problem 1
+
+**Q**: Suppose the globe tossing data had turned out to be 4 water and 11 land. Construct the posterior distribution.

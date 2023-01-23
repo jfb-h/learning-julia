@@ -19,7 +19,7 @@ Pkg.activate(".", io=devnull);
 
 ## Setup
 
-For this exercise, we're interested in performing inference on a simple process where a possibly biased coin is flipped $N=100$ times. More formally, we could state this like so:
+For this exercise, we're interested in performing inference on a simple data-generating process where a possibly biased coin is flipped $N=100$ times. More formally, we could state this like so:
 
 $$
 y_i \sim \mathrm{Bernoulli}(p) \textrm{ for } i = 1,2,...,100
@@ -31,13 +31,14 @@ We start by simulating data from a Bernoulli distribution with the probability o
 using Distributions
 ```
 
-
 ```{julia}
 N = 100
 p = 0.7
 d = Bernoulli(p)
 data = rand(d, N);
 ```
+
+> *Note*: The avid reader will notice that this problem could also be more efficiently represented by making use of independence between the flips, in which case we could just record the total number of flips and the number of heads and make use of the binomial distribution. However, for sake of consistency we here stick to the Bernoulli representation.
 
 ## Model definition
 
@@ -49,19 +50,15 @@ struct CoinflipProblem
 end;
 ```
 
-> *Note*: The avid reader will notice that this problem could also be more efficiently represented by making use of independence between the flips, in which case we could just record the total number of flips and the number of heads and make use of the binomial distribution. However, for sake of consistency we here stick to the Bernoulli representation.
-
 The centerpiece of most modern Bayesian inference methods is the unnormalized log probability density function of the posterior distribution, which indicates how well a given parameter value fits the evidence provided by our data (encoded in the loglikelihood function) and our prior beliefs. For our numerical estimation procedure, it guides our search of the parameter space to obtain a representative set of draws from the posterior distribution.
 
-We start by specifying the loglikelihood function:
+We start by specifying the loglikelihood function, which, for a given value $p$, is the sum of the log probability densities of each of our flips under a $\textrm{Bernoulli}(p)$ distribution:
 
 ```{julia}
 function loglik(p::Real, flips::Vector{Bool})
   sum(y -> logpdf(Bernoulli(p), y), flips)
 end;
 ```
-
-For a given value $p$, the loglikelihood function gives us the sum of the log probability densities of each of our flips under a $\textrm{Bernoulli}(p)$ distribution.
 
 Next to the likelihood function which makes use of the information from the data, we also need to specify a prior distribution which encodes our prior (before having seen the data) belief about $p$. Here, we're going to be broadly skeptical of extremely biased coins and use a $\mathrm{Beta}(2,2)$ prior:
 
@@ -88,7 +85,7 @@ function (problem::CoinflipProblem)(θ)
 end  
 ```
 
-We can now instantiate our problem on the data and evaluate the log posterior density at a couple of values for $p$:
+We can instantiate our `CoinflipProblem` with the data and call it to evaluate the log posterior density at a couple of values for $p$:
 
 ```{julia}
 problem = CoinflipProblem(data)

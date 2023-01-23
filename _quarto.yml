@@ -23,10 +23,14 @@ website:
         contents:
       - section: "Data visualization"
         contents:
-      - section: "Bayesian modeling"
+      - section: "Bayesian modeling tutorials"
         contents: 
           - href: pages/bayes/coinflip_ldp.qmd
             text: "Simple coinflip model"
+      - section: "Statistical rethinking"
+        contents: 
+        - href: pages/statistical-rethinking/globe_tossing.qmd
+          text: "Globe tossing"
 
 
 
