@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.269">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Jakob Hoffmann">
+<meta name="dcterms.date" content="2023-01-01">
+
+<title>Learning Julia - Statistical Rethinking</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+    <div class="container-fluid d-flex justify-content-between">
+      <h1 class="quarto-secondary-nav-title">Statistical Rethinking</h1>
+      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../../">Learning Julia</a> 
+    </div>
+      </div>
+      <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+      </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../agenda.html" class="sidebar-item-text sidebar-link">Agenda</a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">Programming basics</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../pages/programming_recap.html" class="sidebar-item-text sidebar-link">Exercises</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <span class="sidebar-item-text sidebar-link text-start">Julia fundamentals</span>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <span class="sidebar-item-text sidebar-link text-start">Tabular data</span>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <span class="sidebar-item-text sidebar-link text-start">Data visualization</span>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true">Bayesian modeling tutorials</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../pages/bayes/coinflip_ldp.html" class="sidebar-item-text sidebar-link">Simple coinflip model</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true">Statistical rethinking</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../pages/statistical-rethinking/week1.html" class="sidebar-item-text sidebar-link active">Week 1</a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#bayesian-inference-and-bayes-rule" id="toc-bayesian-inference-and-bayes-rule" class="nav-link active" data-scroll-target="#bayesian-inference-and-bayes-rule">Bayesian Inference and Bayes Rule</a></li>
+  <li><a href="#globe-tossing" id="toc-globe-tossing" class="nav-link" data-scroll-target="#globe-tossing">Globe Tossing</a></li>
+  <li><a href="#prior-posterior-predictions" id="toc-prior-posterior-predictions" class="nav-link" data-scroll-target="#prior-posterior-predictions">Prior &amp; Posterior Predictions</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title d-none d-lg-block">Statistical Rethinking</h1>
+<p class="subtitle lead">Week 1</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Jakob Hoffmann </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">January 1, 2023</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+</header>
+
+<section id="bayesian-inference-and-bayes-rule" class="level3">
+<h3 class="anchored" data-anchor-id="bayesian-inference-and-bayes-rule">Bayesian Inference and Bayes Rule</h3>
+<p>Bayesian inference departs from a model for the joint distribution of all observed variables (data, <span class="math inline">\(\mathcal{D}\)</span>) and unobserved variables (parameters, <span class="math inline">\(\theta\)</span>):</p>
+<p><span class="math display">\[ p(\theta, \mathcal{D}) = p(\mathcal{D}|\theta)p(\theta) \]</span></p>
+<p>The factorization on the right hand side is a direct consequence of the definition of conditional probability (see box below).</p>
+<p>Bayesian inference then relies on Bayes’ rule (from which it derives its name) to derive the posterior distribution of parameters <span class="math inline">\(\theta\)</span> conditional on observed data <span class="math inline">\(\mathcal{D}\)</span>:</p>
+<p><span class="math display">\[
+p(\theta | \mathcal{D}) = \frac{p(\mathcal{D}|\theta)p(\theta)}{p({\mathcal{D}})}
+\]</span></p>
+<blockquote class="blockquote">
+<p>Bayes Rule is just a restatement of the general definition of conditional probability:</p>
+<p><span class="math display">\[\mathrm{Pr}(A|B) := \frac{\mathrm{Pr}(A,B)}{\mathrm{Pr}(B)}\]</span></p>
+<p>The numerator here is the joint probability, i.e.&nbsp;the probability that both <span class="math inline">\(A\)</span> and <span class="math inline">\(B\)</span> occur. The joint probability is also sometimes written as <span class="math inline">\(p(A \cap B)\)</span> (an intersection in set notation) and is symmetric with respect to its arguments: <span class="math display">\[\mathrm{Pr}(A,B) = \mathrm{Pr}(A|B)\mathrm{Pr}(B) = \mathrm{Pr}(B|A)\mathrm{Pr}(A)\]</span> If we now replace the joint probability by the its conditioned representation in the definition above, we arive at Bayes Rule: <span class="math display">\[\mathrm{Pr}(A|B) = \frac{\mathrm{Pr}(B|A)\mathrm{Pr}(A)}{\mathrm{Pr}(B)}\]</span></p>
+</blockquote>
+<p>In the context of Bayes’ rule, <span class="math inline">\(p(\mathcal{D}|\theta)\)</span> (taken as a function of <span class="math inline">\(\theta\)</span> and not <span class="math inline">\(\mathcal{D}\)</span>) is called the <em>likelihood</em> and specifies how the data influence our inferences. <span class="math inline">\(p(\theta)\)</span> is called the <em>prior</em> and formalizes our beliefs on the parameters before having seen the data.</p>
+</section>
+<section id="globe-tossing" class="level3">
+<h3 class="anchored" data-anchor-id="globe-tossing">Globe Tossing</h3>
+<section id="simulating-the-data-generating-process" class="level4">
+<h4 class="anchored" data-anchor-id="simulating-the-data-generating-process">Simulating the Data Generating Process</h4>
+<p>Guided by the recommendation from the book, we start by writing a simple program which can simulate the globe tossing experiment. In this case, this just involves sampling ‘water’ or ‘land’ <span class="math inline">\(N\)</span> times, with probabilities <span class="math inline">\(\theta\)</span> and <span class="math inline">\(1-\theta\)</span>, respectively:</p>
+<div class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">StatsBase</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">simulate_globe</span>(θ, N) </span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    outcomes <span class="op">=</span> [<span class="st">"W"</span>, <span class="st">"L"</span>]</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    probabilities <span class="op">=</span> [θ, <span class="fl">1</span><span class="op">-</span>θ]</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sample</span>(outcomes, <span class="fu">Weights</span>(probabilities), N)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">simulate_globe</span>(<span class="fl">0.7</span>, <span class="fl">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="3">
+<pre><code>5-element Vector{String}:
+ "W"
+ "W"
+ "W"
+ "W"
+ "L"</code></pre>
+</div>
+</div>
+</section>
+<section id="the-beta-binomial-model" class="level4">
+<h4 class="anchored" data-anchor-id="the-beta-binomial-model">The Beta-Binomial Model</h4>
+<p>Following the general process of Bayesian inference outlined above, we need a representation of the joint distribution of known and unknown variables, which we can factor into two components: (1) a sampling distribution that describes how the known variables are generated for given values of the unknowns and (2) a prior distribution over the unknowns.</p>
+<p><em>Sampling distribution.</em> The data generating process for the globe tossing example is well represented by a binomial sampling model, which specifies a distribution for the number of ‘successes’ (called <span class="math inline">\(y\)</span>, say occurrences of water) among a number of <span class="math inline">\(N\)</span> trials, each with the same success probability <span class="math inline">\(\theta\)</span>. To indicate that the random variable <span class="math inline">\(y\)</span> follows a binomial distribution, we write:</p>
+<p><span class="math display">\[ y \sim \mathrm{Binomial}(N, \theta)\]</span></p>
+<p>Computing the probability of an observed number of successes <span class="math inline">\(y\)</span> for a given <span class="math inline">\(\theta\)</span> is then given by the probability mass function of the binomial distribution:</p>
+<p><span class="math display">\[ p(y|\theta) = \mathrm{Binomial}(y | N, \theta) = {N \choose y} \theta^y (1-\theta)^{N-y},\]</span></p>
+<p>where <span class="math inline">\({N \choose y} = \frac{N!}{y!(N-y)!}\)</span> is called the binomial coefficient. In the context of the posterior distribution, where the right hand side of the above serves as the likelihood and is taken as a function of <span class="math inline">\(\theta\)</span>, the binomial coefficient is constant (because it does not depend on <span class="math inline">\(\theta\)</span>), which is helpful in analytical derivations.</p>
+<p>Here is a plot of the binomial distribution for different values of <span class="math inline">\(\theta\)</span>, with <span class="math inline">\(N=50\)</span>:</p>
+<div class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Distributions</span>, <span class="bu">CairoMakie</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">plotbinom</span>(params)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">tostring</span>(p) <span class="op">=</span> <span class="st">"Binomial(50, </span><span class="sc">$</span>(p.θ)<span class="st">)"</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    fig <span class="op">=</span> <span class="fu">Figure</span>()</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    ax <span class="op">=</span> <span class="fu">Axis</span>(fig[<span class="fl">1</span>,<span class="fl">1</span>])</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">foreach</span>(params) <span class="cf">do</span> p</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>        d <span class="op">=</span> <span class="fu">Binomial</span>(<span class="fl">50</span>, p.θ)</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>        <span class="fu">barplot!</span>(ax, d; cycle<span class="op">=:</span>color, label<span class="op">=</span><span class="fu">tostring</span>(p))</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">axislegend</span>(ax; position<span class="op">=</span>(<span class="op">:</span>left, <span class="op">:</span>top))</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    fig</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>params <span class="op">=</span> [(;θ<span class="op">=</span><span class="fl">0.1</span>), (;θ<span class="op">=</span><span class="fl">0.5</span>), (;θ<span class="op">=</span><span class="fl">0.9</span>)]</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="fu">plotbinom</span>(params)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="4">
+<p><img src="week1_files/figure-html/cell-4-output-1.svg" class="img-fluid"></p>
+</div>
+</div>
+<p><em>Prior distribution.</em> A natural prior for the parameter <span class="math inline">\(\theta\)</span> is the beta distribution, which is defined for the interval <span class="math inline">\([0,1]\)</span> and thus fits the bounds of <span class="math inline">\(\theta\)</span> (which represents a proportion). The distribution has two paramteres, commonly called <span class="math inline">\(\alpha\)</span> and <span class="math inline">\(\beta\)</span>, which control its shape.</p>
+<p>The probability density function for the beta is given by:</p>
+<p><span class="math display">\[
+p(\theta) = \textrm{Beta}(\theta | \alpha, \beta) = \frac{\Gamma(\alpha + \beta)}{\Gamma(\alpha)\Gamma(\beta)}\theta^{\alpha - 1} (1-\theta)^{\beta - 1}
+\]</span></p>
+<p>The factor involving the gamma functions <span class="math inline">\(\Gamma(\cdot)\)</span> is a normalizing constant ensuring that the pdf integrates to 1 over the sample space. Here is a plot of the pdf with different values for <span class="math inline">\(\alpha\)</span> and <span class="math inline">\(\beta\)</span>:</p>
+<div class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">plotbeta</span>(params)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">tostring</span>(p) <span class="op">=</span> <span class="st">"Beta(</span><span class="sc">$</span>(p.α)<span class="st">, </span><span class="sc">$</span>(p.β)<span class="st">)"</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    fig <span class="op">=</span> <span class="fu">Figure</span>()</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    ax <span class="op">=</span> <span class="fu">Axis</span>(fig[<span class="fl">1</span>,<span class="fl">1</span>])</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">foreach</span>(params) <span class="cf">do</span> p</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>        d <span class="op">=</span> <span class="fu">Beta</span>(p<span class="op">...</span>)</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>        <span class="fu">plot!</span>(ax, d; cycle<span class="op">=:</span>color, label<span class="op">=</span><span class="fu">tostring</span>(p))</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">axislegend</span>(ax; position<span class="op">=</span>(<span class="op">:</span>left, <span class="op">:</span>top))</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    fig</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>params <span class="op">=</span> [(;α<span class="op">=</span><span class="fl">1</span>, β<span class="op">=</span><span class="fl">1</span>), (;α<span class="op">=</span><span class="fl">2</span>, β<span class="op">=</span><span class="fl">2</span>), (;α<span class="op">=</span><span class="fl">3</span>, β<span class="op">=</span><span class="fl">2</span>)]</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="fu">plotbeta</span>(params)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="5">
+<p><img src="week1_files/figure-html/cell-5-output-1.svg" class="img-fluid"></p>
+</div>
+</div>
+<p><em>Posterior distribution</em>. The posterior distribtution is proportional to the prior times the likelihood (which is just the factored joint distribution):</p>
+<p><span class="math display">\[
+p(\theta|\mathcal{D}) \propto p(\mathcal{D}|\theta)p(\theta)
+\]</span></p>
+<p>For many analytical and numerical procedures the normalizing constant <span class="math inline">\(p(\mathcal{D}\)</span>) can be dropped. We here also make use of this fact to analytically derive the closed form posterior distribution. This is not generally possible, which is why numerical applications are so important in Bayesian inference.</p>
+<p>Following the choices above, the unnormalized posterior distribution is then the product of a binomial likelihood and a beta prior:</p>
+<p><span class="math display">\[
+\begin{align}
+p(\theta|\mathcal{D}) &amp;\propto \textrm{Binomial}(y|N, \theta) \times \textrm{Beta}(\theta|\alpha, \beta) \\
+&amp;= {N \choose y} \theta^y (1-\theta)^{N-y} \frac{\Gamma(\alpha + \beta)}{\Gamma(\alpha)\Gamma(\beta)}\theta^{\alpha - 1} (1-\theta)^{\beta - 1}
+\end{align}
+\]</span></p>
+<p>While this looks intimidating at first, it is just the definitions for the binomial and beta pdf (or pmf) multiplied together. Just as we started by dropping the normalizing constant for the posterior distribution, we can now again drop the constants from the beta and binomial probability functions (i.e., everything not involving <span class="math inline">\(\theta\)</span>, such as the binomial coefficient and the gamma functions):</p>
+<p><span class="math display">\[
+\begin{align}
+p(\theta|\mathcal{D}) &amp;\propto \theta^y (1-\theta)^{N-y} \theta^{\alpha - 1} (1-\theta)^{\beta - 1} \\
+&amp;= \theta^{y + \alpha - 1}(1-\theta)^{N-y+\beta-1}
+\end{align}
+\]</span></p>
+<p>The result is the kernel of a beta distribution (i.e.&nbsp;a beta without the normalizing constant), from which we can conclude that the posterior is just another beta distribtution where the <span class="math inline">\(\alpha\)</span> and <span class="math inline">\(\beta\)</span> hyperparameters from the original prior distribution are updated based on the data, i.e.:</p>
+<p><span class="math display">\[ \theta | y \sim \textrm{Beta}(\alpha + y, \beta + N - y)\]</span></p>
+<p>Wrapped into a Julia function, this is a single line of code:</p>
+<div class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">globe_posterior</span>(y, N; α<span class="op">=</span><span class="fl">2</span>, β<span class="op">=</span><span class="fl">2</span>) <span class="op">=</span> <span class="fu">Beta</span>(α <span class="op">+</span> y, β <span class="op">+</span> N <span class="op">-</span> y);</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>With this, we’re now ready to run a simple simulation with, say, <span class="math inline">\(N=100\)</span> throws:</p>
+<div class="cell" data-execution_count="6">
+<details>
+<summary>Plotting function</summary>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">plot_prior_posterior</span>(prior, posterior, true_θ)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    fig <span class="op">=</span> <span class="fu">Figure</span>(); ax <span class="op">=</span> <span class="fu">Axis</span>(fig[<span class="fl">1</span>,<span class="fl">1</span>])</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">plot!</span>(ax, prior; label<span class="op">=</span><span class="st">"Prior"</span>, cycle<span class="op">=:</span>color)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">plot!</span>(ax, posterior; label<span class="op">=</span><span class="st">"Posterior"</span>, cycle<span class="op">=:</span>color)</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">vlines!</span>(ax, true_θ; label<span class="op">=</span><span class="st">"True θ"</span>, linewidth<span class="op">=</span><span class="fl">3</span>, color<span class="op">=:</span>black)</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">axislegend</span>(ax; position<span class="op">=</span>(<span class="op">:</span>left, <span class="op">:</span>top))</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    fig</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span>;</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>true_θ <span class="op">=</span> <span class="fl">0.7</span>; N <span class="op">=</span> <span class="fl">100</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>throws <span class="op">=</span> <span class="fu">simulate_globe</span>(true_θ, N)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> <span class="fu">sum</span>(<span class="op">==</span>(<span class="st">"W"</span>), throws)</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>prior <span class="op">=</span> <span class="fu">Beta</span>(<span class="fl">2</span>,<span class="fl">2</span>)</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>posterior <span class="op">=</span> <span class="fu">globe_posterior</span>(y, N)</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_prior_posterior</span>(prior, posterior, true_θ)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="8">
+<p><img src="week1_files/figure-html/cell-8-output-1.svg" class="img-fluid"></p>
+</div>
+</div>
+<p>Based on this, we can see how our diffuse prior on the proportion of water has been updated based on the data to a posterior that sits close to the true value of <span class="math inline">\(\theta = 0.7\)</span>.</p>
+</section>
+<section id="digression-grid-approximation" class="level4">
+<h4 class="anchored" data-anchor-id="digression-grid-approximation">Digression: Grid Approximation</h4>
+<p>TODO</p>
+</section>
+</section>
+<section id="prior-posterior-predictions" class="level3">
+<h3 class="anchored" data-anchor-id="prior-posterior-predictions">Prior &amp; Posterior Predictions</h3>
+<p>Often times, we are interested in the range of outcomes that would be reasonable to expect for a given prior or posterior distribution, i.e., the prior or posterior <em>predictive</em> distribution. TODO…</p>
+<div class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">predictive</span>(N, prior_or_posterior; S<span class="op">=</span><span class="fl">1000</span>)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">simulate</span>(θ, N) <span class="op">=</span> <span class="fu">rand</span>(<span class="fu">Binomial</span>(N, θ))</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    samples <span class="op">=</span> <span class="fu">rand</span>(prior_or_posterior, S)</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    [<span class="fu">simulate</span>(θ, N) for θ <span class="kw">in</span> samples]</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span>;</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>priorpred <span class="op">=</span> <span class="fu">predictive</span>(<span class="fl">100</span>, <span class="fu">Beta</span>(<span class="fl">1</span>,<span class="fl">1</span>))</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(priorpred)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="10">
+<p><img src="week1_files/figure-html/cell-10-output-1.svg" class="img-fluid"></p>
+</div>
+</div>
+<div class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>postpred <span class="op">=</span> <span class="fu">predictive</span>(<span class="fl">100</span>, posterior)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(postpred); <span class="fu">xlims!</span>(<span class="fl">0</span>, <span class="fl">100</span>); <span class="fu">current_figure</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="11">
+<p><img src="week1_files/figure-html/cell-11-output-1.svg" class="img-fluid"></p>
+</div>
+</div>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
