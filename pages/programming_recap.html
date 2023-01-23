@@ -187,7 +187,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true">Bayesian modeling</a>
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true">Bayesian modeling tutorials</a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -196,6 +196,21 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../pages/bayes/coinflip_ldp.html" class="sidebar-item-text sidebar-link">Simple coinflip model</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true">Statistical rethinking</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../pages/statistical-rethinking/globe_tossing.html" class="sidebar-item-text sidebar-link">Globe tossing</a>
   </div>
 </li>
       </ul>
@@ -324,6 +339,9 @@ Hello, Marius!</code></pre>
 <div class="cell-output cell-output-stdout">
 <pre><code>sum_of_squares([1, 2, 3]) = 14</code></pre>
 </div>
+<div class="cell-output cell-output-stdout">
+<pre><code></code></pre>
+</div>
 </div>
 </section>
 <section id="exercise-5" class="level3">
@@ -332,8 +350,8 @@ Hello, Marius!</code></pre>
 <div class="cell" data-execution_count="5">
 <details>
 <summary>Solution</summary>
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">largest_element</span>(arr) <span class="op">=</span> <span class="fu">findmax</span>(arr)[<span class="fl">1</span>]</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="pp">@show</span> <span class="fu">largest_element</span>([<span class="fl">5</span>,<span class="fl">2</span>,<span class="fl">1</span>,<span class="fl">7</span>]);</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">largest_element</span>(arr) <span class="op">=</span> <span class="fu">findmax</span>(arr)[<span class="fl">1</span>]</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="pp">@show</span> <span class="fu">largest_element</span>([<span class="fl">5</span>,<span class="fl">2</span>,<span class="fl">1</span>,<span class="fl">7</span>]);</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>largest_element([5, 2, 1, 7]) = 7</code></pre>
@@ -346,17 +364,14 @@ Hello, Marius!</code></pre>
 <div class="cell" data-execution_count="6">
 <details>
 <summary>Solution</summary>
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">greater_5</span>(arr) <span class="op">=</span> <span class="fu">filter</span>(<span class="fu">&gt;</span>(<span class="fl">5</span>), arr)</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">greater_k</span>(arr, k) <span class="op">=</span> <span class="fu">filter</span>(<span class="fu">&gt;</span>(k), arr)</span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="pp">@show</span> <span class="fu">greater_5</span>([<span class="fl">1</span>,<span class="fl">2</span>,<span class="fl">3</span>,<span class="fl">4</span>,<span class="fl">5</span>,<span class="fl">6</span>,<span class="fl">7</span>,<span class="fl">8</span>]);</span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="pp">@show</span> <span class="fu">greater_k</span>([<span class="fl">1</span>,<span class="fl">2</span>,<span class="fl">3</span>,<span class="fl">4</span>,<span class="fl">5</span>,<span class="fl">6</span>,<span class="fl">7</span>,<span class="fl">8</span>], <span class="fl">2</span>);</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">greater_5</span>(arr) <span class="op">=</span> <span class="fu">filter</span>(<span class="fu">&gt;</span>(<span class="fl">5</span>), arr)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">greater_k</span>(arr, k) <span class="op">=</span> <span class="fu">filter</span>(<span class="fu">&gt;</span>(k), arr)</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="pp">@show</span> <span class="fu">greater_5</span>([<span class="fl">1</span>,<span class="fl">2</span>,<span class="fl">3</span>,<span class="fl">4</span>,<span class="fl">5</span>,<span class="fl">6</span>,<span class="fl">7</span>,<span class="fl">8</span>]);</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="pp">@show</span> <span class="fu">greater_k</span>([<span class="fl">1</span>,<span class="fl">2</span>,<span class="fl">3</span>,<span class="fl">4</span>,<span class="fl">5</span>,<span class="fl">6</span>,<span class="fl">7</span>,<span class="fl">8</span>], <span class="fl">2</span>);</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>greater_5([1, 2, 3, 4, 5, 6, 7, 8]) = [6, 7, 8]</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
+<pre><code>greater_5([1, 2, 3, 4, 5, 6, 7, 8]) = [6, 7, 8]
 greater_k([1, 2, 3, 4, 5, 6, 7, 8], 2) = [3, 4, 5, 6, 7, 8]</code></pre>
 </div>
 </div>
@@ -412,8 +427,7 @@ greater_k([1, 2, 3, 4, 5, 6, 7, 8], 2) = [3, 4, 5, 6, 7, 8]</code></pre>
 <pre><code>concatenate([1, 2], [3, 4, 5]) = [1, 2, 3, 4, 5]</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>
-concatenate_matrix([1, 2, 3], [4, 5, 6]) = [1 4; 2 5; 3 6]</code></pre>
+<pre><code>concatenate_matrix([1, 2, 3], [4, 5, 6]) = [1 4; 2 5; 3 6]</code></pre>
 </div>
 </div>
 </section>
@@ -430,11 +444,11 @@ concatenate_matrix([1, 2, 3], [4, 5, 6]) = [1 4; 2 5; 3 6]</code></pre>
 </details>
 <div class="cell-output cell-output-display" data-execution_count="11">
 <pre><code>5-element Vector{Float64}:
- 1.6359309512428468
- 2.125480711548695
- 1.4360754105888132
- 0.9514149506833531
- 2.1284827048910118</code></pre>
+ 1.799276641641501
+ 0.39794036021303913
+ 2.7823839503538568
+ 1.1296826365558266
+ 1.958953729822141</code></pre>
 </div>
 </div>
 
