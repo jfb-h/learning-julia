@@ -297,9 +297,9 @@ p(\theta | \mathcal{D}) = \frac{p(\mathcal{D}|\theta)p(\theta)}{p({\mathcal{D}})
 <span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">simulate_globe</span>(<span class="fl">0.7</span>, <span class="fl">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="3">
 <pre><code>5-element Vector{String}:
+ "L"
  "W"
- "L"
- "L"
+ "W"
  "W"
  "W"</code></pre>
 </div>
@@ -309,10 +309,9 @@ p(\theta | \mathcal{D}) = \frac{p(\mathcal{D}|\theta)p(\theta)}{p({\mathcal{D}})
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Distributions</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">simulate_globe_binomial</span>(θ, N) <span class="op">=</span> <span class="fu">rand</span>(<span class="fu">Binomial</span>(N, θ))</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="fu">simulate_globe_binomial</span>(<span class="fl">0.7</span>, <span class="fl">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="fu">simulate_globe_binomial</span>(<span class="fl">0.7</span>, <span class="fl">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="4">
-<pre><code>4</code></pre>
+<pre><code>2</code></pre>
 </div>
 </div>
 </section>
@@ -427,33 +426,59 @@ p(\theta|\mathcal{D}) &amp;\propto \theta^y (1-\theta)^{N-y} \theta^{\alpha - 1}
 </section>
 <section id="digression-grid-approximation" class="level4">
 <h4 class="anchored" data-anchor-id="digression-grid-approximation">Digression: Grid Approximation</h4>
-<p><em>TODO</em></p>
+<p>A different way to obtain the posterior distribution, relying on numerical approximation, is to compute the joint distribution (likelihood <span class="math inline">\(\times\)</span> prior) at a fine grid of values and then normalize this by dividing by the sum of the computed values.</p>
+<div class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">joint</span>(N, y, θ) <span class="op">=</span> <span class="fu">pdf</span>(<span class="fu">Beta</span>(<span class="fl">1</span>,<span class="fl">1</span>), θ) <span class="op">*</span> <span class="fu">pdf</span>(<span class="fu">Binomial</span>(N, θ), y)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">posterior_approx</span>(N, y; P<span class="op">=</span><span class="fl">1000</span>)</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    grid <span class="op">=</span> <span class="fu">range</span>(<span class="fl">0</span>, <span class="fl">1</span>, P)</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    points <span class="op">=</span> [<span class="fu">joint</span>(N, y, θ) for θ <span class="kw">in</span> grid]</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    posterior <span class="op">=</span> points <span class="op">./</span> <span class="fu">sum</span>(points)</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sample</span>(grid, <span class="fu">Weights</span>(posterior), <span class="fl">10_000</span>; replace<span class="op">=</span><span class="cn">true</span>)</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>post <span class="op">=</span> <span class="fu">posterior_approx</span>(N, y)</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(post; color<span class="op">=:</span>grey80, strokewidth<span class="op">=</span><span class="fl">1</span>) </span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a><span class="fu">vlines!</span>(true_θ; color<span class="op">=:</span>black, linewidth<span class="op">=</span><span class="fl">2</span>)</span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a><span class="fu">xlims!</span>(<span class="fl">0</span>, <span class="fl">1</span>); <span class="fu">current_figure</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="10">
+<p><img src="week1_files/figure-html/cell-10-output-1.svg" class="img-fluid"></p>
+</div>
+</div>
+<p>While this approach does not rely on mathematical conveniences such as conjugacy, it suffers from the curse of dimensionality: The number of grid points grows exponentially with the number of parameters and so grid approximation is only suited for very simiple problems.</p>
 </section>
 </section>
 <section id="prior-posterior-predictions" class="level3">
 <h3 class="anchored" data-anchor-id="prior-posterior-predictions">Prior &amp; Posterior Predictions</h3>
-<p>Often times, we are interested in the range of outcomes that would be reasonable to expect for a given prior or posterior distribution, i.e., the prior or posterior <em>predictive</em> distribution. <em>TODO…</em></p>
-<div class="cell" data-execution_count="9">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">predictive</span>(N, prior_or_posterior; S<span class="op">=</span><span class="fl">1000</span>)</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">simulate</span>(θ, N) <span class="op">=</span> <span class="fu">rand</span>(<span class="fu">Binomial</span>(N, θ))</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    samples <span class="op">=</span> <span class="fu">rand</span>(prior_or_posterior, S)</span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    [<span class="fu">simulate</span>(θ, N) for θ <span class="kw">in</span> samples]</span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span>;</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
+<p>Often times, we are interested in the range of outcomes that would be reasonable to expect for a given prior or posterior distribution, i.e., the prior or posterior <em>predictive</em> distribution. Seeing how the model behaves for a given prior or posterior distribution is useful for model &amp; research design, for model checking and validation, or for making forecasts.</p>
+<p>A particularly practical way to obtain the prior or posterior predictive distribution is via sampling many times from the prior or posterior and then for each sampled parameter value simulate an outcome from the observation model.</p>
+<p>For the globe tossing example this could look like the following julia function:</p>
 <div class="cell" data-execution_count="10">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>priorpred <span class="op">=</span> <span class="fu">predictive</span>(<span class="fl">100</span>, <span class="fu">Beta</span>(<span class="fl">1</span>,<span class="fl">1</span>))</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(priorpred)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="11">
-<p><img src="week1_files/figure-html/cell-11-output-1.svg" class="img-fluid"></p>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">predictive</span>(N, prior_or_posterior; S<span class="op">=</span><span class="fl">1000</span>)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">simulate</span>(θ, N) <span class="op">=</span> <span class="fu">rand</span>(<span class="fu">Binomial</span>(N, θ))</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    samples <span class="op">=</span> <span class="fu">rand</span>(prior_or_posterior, S)</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    [<span class="fu">simulate</span>(θ, N) for θ <span class="kw">in</span> samples]</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span>;</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</div>
+<p>We can now use this to check what kinds of results the model would deem reasonable in an experiment with 100 globe throws, before seeing any data and just based on a flat <span class="math inline">\(\textrm{Beta}(1,1)\)</span> prior:</p>
 <div class="cell" data-execution_count="11">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>postpred <span class="op">=</span> <span class="fu">predictive</span>(<span class="fl">100</span>, posterior)</span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(postpred); <span class="fu">xlims!</span>(<span class="fl">0</span>, <span class="fl">100</span>); <span class="fu">current_figure</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>priorpred <span class="op">=</span> <span class="fu">predictive</span>(<span class="fl">100</span>, <span class="fu">Beta</span>(<span class="fl">1</span>,<span class="fl">1</span>))</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(priorpred; color<span class="op">=:</span>grey80, strokewidth<span class="op">=</span><span class="fl">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="12">
 <p><img src="week1_files/figure-html/cell-12-output-1.svg" class="img-fluid"></p>
 </div>
 </div>
+<p>This indicates that, under the flat prior, a result of 0 out of 100 times water is seen as similarly likely as, e.g., 50 out of 100 times water, which is probably not that sensible.</p>
+<p>We can perform a similar excercise but now based on the posterior distribution:</p>
+<div class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>postpred <span class="op">=</span> <span class="fu">predictive</span>(<span class="fl">100</span>, posterior)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(postpred; color<span class="op">=:</span>grey80, strokewidth<span class="op">=</span><span class="fl">1</span>)</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="fu">xlims!</span>(<span class="fl">0</span>, <span class="fl">100</span>); <span class="fu">current_figure</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="13">
+<p><img src="week1_files/figure-html/cell-13-output-1.svg" class="img-fluid"></p>
+</div>
+</div>
+<p>Consistent with the posterior distribution centered at 0.7, we can see that the model now expects around 70 out of 100 throws to result in ‘water’ and both values lower than 50 or close to 100 are deemed very unlikely.</p>
 
 
 </section>
