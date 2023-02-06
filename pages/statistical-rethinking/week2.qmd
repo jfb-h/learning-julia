@@ -1,0 +1,106 @@
+---
+title: "Statistical Rethinking"
+subtitle: "Week 2"
+author: "Jakob Hoffmann"
+date: "01/27/2023"
+format: html
+jupyter: julia-1.8
+---
+
+```{julia}
+using HTTP
+using CSV
+using DataFrames
+
+function download_data(dataset)
+    repo = "https://raw.githubusercontent.com/rmcelreath/rethinking/master/data/"
+    link = repo * dataset
+    file = HTTP.download(link)
+    CSV.read(file, DataFrame)
+end
+
+df = download_data("Howell1.csv")
+```
+
+```{julia}
+using CairoMakie
+
+plotargs = (
+    color=(:black, 0.0), 
+    strokewidth=4, strokecolor=(:crimson, .6),
+)
+
+scatter(df.height, df.weight; figure=(;resolution=(500, 500)), plotargs...)
+```
+```{julia}
+df18 = df[df.age .> 18, :]
+scatter(df18.height, df18.weight; figure=(;resolution=(500, 500)), plotargs...)
+```
+
+# Homework 1
+
+```{julia}
+using DataFramesMeta
+
+df = download_data("Howell1.csv")
+data = @rsubset df :age < 13
+```
+
+```{julia}
+using Distributions
+
+function simulate_data(age, β_age, β_height, β_age_height)
+    μ_height = 30 + β_age_height*age
+    height = rand(Normal(μ_height, 15))
+
+    μ_weight = 5 + β_age*age + β_height*height
+    weight = rand(Normal(μ_weight, 5))
+
+    height, weight
+end
+
+function plot_simulation(age, height, weight)
+    fig = Figure(resolution=(800, 400))
+    ax1 = Axis(fig[1,1]; xlabel="age", ylabel="height")
+    ax2 = Axis(fig[1,2]; xlabel="age", ylabel="weight")
+    scatter!(ax1, age, height; plotargs...)
+    scatter!(ax2, age, weight; plotargs...)
+    fig
+end
+
+age = 0:0.1:10
+sim = simulate_data.(age, .3, .3, 15)
+heights = first.(sim)
+weights = last.(sim)
+
+plot_simulation(age, heights, weights)
+```
+
+
+```{julia}
+using Turing
+using Optim
+using StatsBase
+using LinearAlgebra
+
+@model function linear_regression(y, X)
+    α ~ Normal(0, 10)
+    β ~ Normal(0, 10)
+    σ ~ Exponential(1)
+    μ = α .+ X*β
+    for i in 1:size(X, 1)
+        y[i] ~ Normal(μ[i], σ)
+    end
+end
+
+function quadratic_approximation(model)
+    est = optimize(model, MAP())
+    cov = Symmetric(vcov(est).array)
+    MvNormal(est.values.array, cov)
+end
+
+X = hcat(age, heights)
+
+model = linear_regression(weights, X)
+fit = quadratic_approximation(model)
+```
