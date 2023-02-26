@@ -9,8 +9,13 @@ jupyter: julia-1.8
 
 ```{julia}
 #| echo: false
+using Pkg
 Pkg.activate(".", io=devnull);
 ```
+
+### About this Document
+
+This writeup loosely follows Richard McElreath's Statistical Rethinking [YouTube lecture](https://www.youtube.com/watch?v=FdnMWdICdRs&t=42s) and book of the same name. As a programming environment it uses Julia (instead of R, as used in the lecture). Julia has a variety of packages on probabilistic programming and Bayesian inference, such as Turing.jl, LogDensityProblems.jl, or Stan.jl. This writeup focuses more on the technical implementation and assumes that the reader has followed the lecture for background and reasoning.
 
 ### Bayesian Inference and Bayes Rule
 
@@ -30,18 +35,18 @@ $$
 > 
 > $$\mathrm{Pr}(A|B) := \frac{\mathrm{Pr}(A,B)}{\mathrm{Pr}(B)}$$
 > 
-> The numerator here is the joint probability, i.e. the probability that both $A$ and $B$ occur. The joint probability is also sometimes written as $p(A \cap B)$ (an intersection in set notation) and is symmetric with respect to its arguments:
+> The numerator here is the joint probability, i.e. the probability that both events $A$ and $B$ occur. The joint probability is also sometimes written as $p(A \cap B)$ (an intersection in set notation) and is symmetric with respect to its arguments:
 > $$\mathrm{Pr}(A,B) = \mathrm{Pr}(A|B)\mathrm{Pr}(B) = \mathrm{Pr}(B|A)\mathrm{Pr}(A)$$
 > If we now replace the joint probability by the its conditioned representation in the definition above, we arive at Bayes Rule:
 > $$\mathrm{Pr}(A|B) = \frac{\mathrm{Pr}(B|A)\mathrm{Pr}(A)}{\mathrm{Pr}(B)}$$
 
-In the context of Bayes' rule, $p(\mathcal{D}|\theta)$ (taken as a function of $\theta$ and not $\mathcal{D}$) is called the *likelihood* and specifies how the data influence our inferences. $p(\theta)$ is called the *prior* and formalizes our beliefs on the parameters before having seen the data.
+In the context of Bayes' rule, $p(\mathcal{D}|\theta)$ (taken as a function of $\theta$ and not $\mathcal{D}$) is called the *likelihood* and specifies how the data influence our inferences. $p(\theta)$ is called the *prior* and formalizes our beliefs on the parameters before having seen the data (which might derive from earlier studies or common sense).
 
 ### Globe Tossing
 
 #### Simulating the Data Generating Process
 
-Guided by the recommendation from the book, we start by writing a simple program which can simulate the globe tossing experiment. In this case, this just involves sampling 'water' or 'land' $N$ times, with probabilities $\theta$ and $1-\theta$, respectively: 
+We start by writing a simple program which can simulate the globe tossing experiment. In this case, this just involves sampling 'water' or 'land' $N$ times, with probabilities $\theta$ and $1-\theta$, respectively: 
 
 ```{julia}
 using StatsBase

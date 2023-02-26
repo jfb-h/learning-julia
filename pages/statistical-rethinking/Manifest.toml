@@ -2,7 +2,7 @@
 
 julia_version = "1.8.5"
 manifest_format = "2.0"
-project_hash = "551d4705be020bf12759aa8419a7663a625f2885"
+project_hash = "0b9fb1d9915f9daf0818855d151f038c04ffa2f1"
 
 [[deps.AbstractFFTs]]
 deps = ["ChainRulesCore", "LinearAlgebra"]
@@ -378,6 +378,12 @@ deps = ["Calculus", "NaNMath", "SpecialFunctions"]
 git-tree-sha1 = "5837a837389fccf076445fce071c8ddaea35a566"
 uuid = "fa6b7ba4-c1ee-5f82-b5fc-ecf0adba8f74"
 version = "0.6.8"
+
+[[deps.DynamicHMC]]
+deps = ["ArgCheck", "DocStringExtensions", "FillArrays", "LinearAlgebra", "LogDensityProblems", "LogExpFunctions", "Parameters", "ProgressMeter", "Random", "Statistics", "TensorCast"]
+git-tree-sha1 = "83245e3019a8461a5afdf37d55bc1fcf14773b78"
+uuid = "bbc10e6e-7c05-544b-b16e-64fede858acb"
+version = "3.4.3"
 
 [[deps.DynamicPPL]]
 deps = ["AbstractMCMC", "AbstractPPL", "BangBang", "Bijectors", "ChainRulesCore", "ConstructionBase", "Distributions", "DocStringExtensions", "LinearAlgebra", "LogDensityProblems", "MacroTools", "OrderedCollections", "Random", "Setfield", "Test", "ZygoteRules"]
@@ -810,6 +816,12 @@ git-tree-sha1 = "a560dd966b386ac9ae60bdd3a3d3a326062d3c3e"
 uuid = "8cdb02fc-e678-4876-92c5-9defec4f444e"
 version = "0.3.1"
 
+[[deps.LazyStack]]
+deps = ["ChainRulesCore", "Compat", "LinearAlgebra"]
+git-tree-sha1 = "fe426ebaf20ab5ffe983a5a2980fa1ff5f540217"
+uuid = "1fad7336-0346-5a1a-a56f-a06ba010965b"
+version = "0.1.1"
+
 [[deps.LeftChildRightSiblingTrees]]
 deps = ["AbstractTrees"]
 git-tree-sha1 = "fb6803dafae4a5d62ea5cab204b1e657d9737e7f"
@@ -904,9 +916,9 @@ version = "2.1.0"
 
 [[deps.LogDensityProblemsAD]]
 deps = ["DocStringExtensions", "LogDensityProblems", "Requires", "UnPack"]
-git-tree-sha1 = "9c5ad7ecb6c103e7b38bb000ca414f2483852f98"
+git-tree-sha1 = "1da83abf587f62ed9b75edef633c30d8e27e227b"
 uuid = "996a588d-648d-4e1f-a8f0-a84b347e47b1"
-version = "1.1.1"
+version = "1.2.1"
 
 [[deps.LogExpFunctions]]
 deps = ["ChainRulesCore", "ChangesOfVariables", "DocStringExtensions", "InverseFunctions", "IrrationalConstants", "LinearAlgebra"]
@@ -1556,6 +1568,12 @@ git-tree-sha1 = "ab6083f09b3e617e34a956b43e9d51b824206932"
 uuid = "4c63d2b9-4356-54db-8cca-17b64c39e42c"
 version = "1.1.1"
 
+[[deps.Strided]]
+deps = ["LinearAlgebra", "TupleTools"]
+git-tree-sha1 = "a7a664c91104329c88222aa20264e1a05b6ad138"
+uuid = "5e0ebb24-38b0-5f93-81fe-25c709ecae67"
+version = "1.2.3"
+
 [[deps.StringManipulation]]
 git-tree-sha1 = "46da2434b41f41ac3594ee9816ce5541c6096123"
 uuid = "892a3eda-7b42-436c-8928-eab12a02cf0e"
@@ -1599,6 +1617,12 @@ deps = ["ArgTools", "SHA"]
 uuid = "a4e569a6-e804-4fa4-b0f3-eef7a1d5b13e"
 version = "1.10.1"
 
+[[deps.TensorCast]]
+deps = ["ChainRulesCore", "Compat", "LazyStack", "LinearAlgebra", "MacroTools", "Random", "StaticArrays", "TransmuteDims"]
+git-tree-sha1 = "88423a9e2a1eb7fb2e8c4dd7ede52e28bc5769eb"
+uuid = "02d47bb6-7ce6-556a-be16-bb1710789e2b"
+version = "0.4.6"
+
 [[deps.TensorCore]]
 deps = ["LinearAlgebra"]
 git-tree-sha1 = "1feb45f88d133a655e001435632f019a9a1bcdb6"
@@ -1638,6 +1662,24 @@ deps = ["Adapt", "ArgCheck", "BangBang", "Baselet", "CompositionsBase", "DefineS
 git-tree-sha1 = "c42fa452a60f022e9e087823b47e5a5f8adc53d5"
 uuid = "28d57a85-8fef-5791-bfe6-a80928e7c999"
 version = "0.4.75"
+
+[[deps.TransformVariables]]
+deps = ["ArgCheck", "ChangesOfVariables", "DocStringExtensions", "ForwardDiff", "InverseFunctions", "LinearAlgebra", "LogExpFunctions", "Pkg", "Random", "StaticArrays", "UnPack"]
+git-tree-sha1 = "2b454e553fa8de6a290abc0c76e8766da5761868"
+uuid = "84d833dd-6860-57f9-a1a7-6da5db126cff"
+version = "0.8.0"
+
+[[deps.TransformedLogDensities]]
+deps = ["LogDensityProblems", "TransformVariables", "UnPack"]
+git-tree-sha1 = "9febb8593cd243aa1985994ec9f2cd94dff53ffc"
+uuid = "f9bc47f6-f3f8-4f3b-ab21-f8bc73906f26"
+version = "1.0.3"
+
+[[deps.TransmuteDims]]
+deps = ["Adapt", "ChainRulesCore", "GPUArraysCore", "LinearAlgebra", "Requires", "Strided"]
+git-tree-sha1 = "64df189c13692b9581924775109cb14a6b5aef8d"
+uuid = "24ddb15e-299a-5cc3-8414-dbddc482d9ca"
+version = "0.1.15"
 
 [[deps.TriplotBase]]
 git-tree-sha1 = "4d4ed7f294cda19382ff7de4c137d24d16adc89b"

@@ -5,6 +5,9 @@ format:
     theme: lux
     #css: styles.css
     toc: true
+execute:
+  # cache: true
+  enabled: true
 website:
   title: "Learning Julia"
   sidebar:
@@ -17,21 +20,20 @@ website:
         contents:
           - href: pages/programming_recap.qmd
             text: "Exercises"
-      - section: "Julia fundamentals"
-        contents:
-      - section: "Tabular data"
-        contents:
-      - section: "Data visualization"
-        contents:
-      - section: "Bayesian modeling tutorials"
-        contents: 
-          - href: pages/bayes/coinflip_ldp.qmd
-            text: "Simple coinflip model"
+      # - section: "Julia fundamentals"
+      #   contents:
+      # - section: "Tabular data"
+      #   contents:
+      # - section: "Data visualization"
+      #   contents:
+      # - section: "Bayesian modeling tutorials"
+      #   contents: 
+      #     - href: pages/bayes/coinflip_ldp.qmd
+      #       text: "Simple coinflip model"
       - section: "Statistical rethinking"
         contents: 
         - href: pages/statistical-rethinking/week1.qmd
           text: "Week 1"
-
-
-
+        - href: pages/statistical-rethinking/week2.qmd
+          text: "Week 2"
 

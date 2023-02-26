@@ -2,105 +2,232 @@
 title: "Statistical Rethinking"
 subtitle: "Week 2"
 author: "Jakob Hoffmann"
-date: "01/27/2023"
+date: "02/20/2023"
 format: html
 jupyter: julia-1.8
+execute:
+    daemon: 900
 ---
+
+### Get and Inspect Data
+
+In the week 2 lecture, we learn techniques of linear regression in the investigation of the relationships between height, weight, age and sex. We start by writing a function to download the data used in the lecture from its GitHub repository directly into a DataFrame.
 
 ```{julia}
 using HTTP
 using CSV
 using DataFrames
+using DataFramesMeta
+using CairoMakie
+using Distributions
+```
 
+```{julia}
 function download_data(dataset)
     repo = "https://raw.githubusercontent.com/rmcelreath/rethinking/master/data/"
     link = repo * dataset
     file = HTTP.download(link)
     CSV.read(file, DataFrame)
-end
-
-df = download_data("Howell1.csv")
+end;
 ```
 
 ```{julia}
-using CairoMakie
-
-plotargs = (
-    color=(:black, 0.0), 
-    strokewidth=4, strokecolor=(:crimson, .6),
-)
-
-scatter(df.height, df.weight; figure=(;resolution=(500, 500)), plotargs...)
-```
-```{julia}
-df18 = df[df.age .> 18, :]
-scatter(df18.height, df18.weight; figure=(;resolution=(500, 500)), plotargs...)
+df = download_data("Howell1.csv");
 ```
 
-# Homework 1
+We create a second dataset containing only adults, as the growth dynamics of children result in a quite different relationship between weight and height:
 
 ```{julia}
-using DataFramesMeta
+df18 = @rsubset(df, :age > 18);
+```
 
-df = download_data("Howell1.csv")
-data = @rsubset df :age < 13
+Here's a plot of the full dataset and the adults-only dataset sidy-by-side:
+
+```{julia}
+#| code-fold: true
+
+plotargs = (color=(:black, 0.0), strokewidth=4, strokecolor=(:crimson, .5))
+
+fig = Figure(resolution=(800, 400))
+ax1 = Axis(fig[1,1]; title="Full data", ylabel="weight (kg)", xlabel="height (cm)")
+ax2 = Axis(fig[1,2]; title="Age > 18 years", xlabel="height (cm)")
+
+scatter!(ax1, df.height, df.weight; plotargs...)
+scatter!(ax2, df18.height, df18.weight; plotargs...)
+
+fig
+```
+
+### Modeling the Data Generating Process
+
+For the adults-only data, a simple linear regression model seems to capture the relationship between height and weight well. There are two equivalent ways to specify such a model. The first uses the direct specification of a distribution for our outcome observations:
+
+$$
+\begin{align}
+\textrm{weight}_i &\sim \textrm{Normal}(\mu_i, \sigma) \\
+\mu_i &= \alpha + \beta \textrm{height}_i
+\end{align}
+$$
+
+The second way instead places the distribution on the *errors* or *residuals* ($\epsilon_i$), i.e., the deviations of the observations from the regression line:
+
+$$
+\begin{align}
+\textrm{weight}_i &= \alpha + \beta \textrm{height}_i + \epsilon_i \\
+\epsilon_i &\sim \textrm{Normal}(0, \sigma)
+\end{align}
+$$
+
+
+As for the globe tossing model in week 1, we specify a simulation procedure for this model to generate fake data for some height and known values of the parameters. We chose the second of the two above representations by generating a mean zero residual and adding it to the regression line at some height $H$:
+
+```{julia}
+function simulate_weight(H; β, σ)
+    U = rand(Normal(0, σ))
+    β*H + U
+end;
+```
+
+Note that a full specification usually also includes the regression line intercept (often denoted $\alpha$), which is implicitly set to zero in this simulation, i.e., a person with height zero is assumed to have weight zero.
+
+With this function, we can, e.g., simulate the weight of a person that is 1,58m tall. If you run the function multiple times it will return different values. This is the case due to the DGP's inherent randomness, controlled here by $\sigma$:
+
+```{julia}
+simulate_weight(158; β=0.5, σ=5)
 ```
 
 ```{julia}
-using Distributions
-
-function simulate_data(age, β_age, β_height, β_age_height)
-    μ_height = 30 + β_age_height*age
-    height = rand(Normal(μ_height, 15))
-
-    μ_weight = 5 + β_age*age + β_height*height
-    weight = rand(Normal(μ_weight, 5))
-
-    height, weight
-end
-
-function plot_simulation(age, height, weight)
-    fig = Figure(resolution=(800, 400))
-    ax1 = Axis(fig[1,1]; xlabel="age", ylabel="height")
-    ax2 = Axis(fig[1,2]; xlabel="age", ylabel="weight")
-    scatter!(ax1, age, height; plotargs...)
-    scatter!(ax2, age, weight; plotargs...)
-    fig
-end
-
-age = 0:0.1:10
-sim = simulate_data.(age, .3, .3, 15)
-heights = first.(sim)
-weights = last.(sim)
-
-plot_simulation(age, heights, weights)
+heights = rand(Uniform(130, 170), 200)
+weights = simulate_weight.(heights; β=0.5, σ=5)
+scatter(heights, weights; figure=(;resolution=(600, 400)), label = "Simulated data", plotargs...)
+lines!([130, 170], [130, 170] .* 0.5; label = "True regression line")
+axislegend(position=:lt); current_figure()
 ```
 
+### Bayesian Inference
+
+We are now ready to estimate the unknown parameters specifying the relationship between height and weight based on observed data. In the context of Bayesian inerence, this means that we need to specify the joint distribution, or equivalently the likelihood and prior. In Julia, one way to do this is to use the probabilistic programming language `Turing.jl`:
 
 ```{julia}
 using Turing
 using Optim
-using StatsBase
+using StatsBase: vcov
 using LinearAlgebra
+using StructArrays
+```
 
-@model function linear_regression(y, X)
+```{julia}
+@model function linear_regression(weights, heights)
+    # Prior
     α ~ Normal(0, 10)
     β ~ Normal(0, 10)
-    σ ~ Exponential(1)
-    μ = α .+ X*β
-    for i in 1:size(X, 1)
-        y[i] ~ Normal(μ[i], σ)
+    σ ~ Exponential(3)
+    # Likelihood
+    for i in eachindex(weights)
+        weights[i] ~ Normal(α + β*heights[i], σ)
     end
-end
+end;
+```
 
+For models of intermediate complexity, the lecture uses the *quadratic or laplace approximation*, which approximates the posterior distribution with a multivariate normal centered at its mode. The mode, i.e., the set of parameters for which the posterior density is maximized, can be found with some numerical optimization procedure:
+
+```{julia}
 function quadratic_approximation(model)
     est = optimize(model, MAP())
     cov = Symmetric(vcov(est).array)
     MvNormal(est.values.array, cov)
-end
+end;
+```
 
-X = hcat(age, heights)
+With this in place, we can now instantiate the model and produce a fit with the quadratic approximation:
 
-model = linear_regression(weights, X)
+```{julia}
+model = linear_regression(df18.weight, df18.height);
+```
+
+```{julia}
 fit = quadratic_approximation(model)
+```
+
+Because the result is a distribution (a multivariate normal, as mentioned above), we can use the usual interface to, e.g., draw random samples from the posterior via `rand()`. We here wrap this into a small helper function which adds parameter names to the resulting random samples and wraps them into a `StructArray` for easier processing:
+
+```{julia}
+function posterior_samples(fit; S=1000)
+    r = rand(fit, S)
+    r = map(eachcol(r)) do s
+        NamedTuple{(:α, :β, :σ)}(s)
+    end
+    StructArray(r)
+end;
+```
+
+With this function, it is now easy to draw a number regression lines from the posterior distribution and plot them with our data:
+
+```{julia}
+function plot_model_and_data(heights, weights, fit)
+    fig = Figure(resolution=(800, 400))
+    ax = Axis(fig[1,1])
+    scatter!(ax, heights, weights; plotargs...)
+    samples = posterior_samples(fit; S=50)
+    for s in samples
+        lines!(ax, [130, 190], s.α .+ [130, 190] .* s.β; color=(:black, .4))
+    end
+
+    fig
+end; 
+```
+
+```{julia}
+plot_model_and_data(df18.height, df18.weight, fit)
+```
+
+### Digression: Building an unnormalized posterior density by hand
+
+For inference, Turing turns the model specification into a function evaluating the log joint for a given set of parameter values, which can then be used by some inference algorithm (such as the quadratic approximation). Instead of using the Turing specification, we could also build this function by hand. 
+
+
+We start with the (log) likelihood, which for a given set of parameter values is just the sum of the log probability densities of each observation's weight under a normal distribution, with the mean given by the regression line induced by parameters $\alpha$ and $\beta$ at that observation's height and residual standard deviation $\sigma$:
+
+```{julia}
+function loglikelihood(α, β, σ; weights, heights)
+    sum(eachindex(weights)) do i
+        logpdf(Normal(α + β*heights[i], σ), weights[i])
+    end
+end;
+```
+
+We pick a set of parameter values with which to evaluate our function:
+
+```{julia}
+α, β, σ = 0, 0.5, 5
+```
+
+```{julia}
+loglikelihood(α, β, σ; weights, heights)
+```
+
+Similarly, the prior evaluates the log density for each parameter value under the corresponding prior distribution:
+
+```{julia}
+function logprior(α, β, σ)
+    logpdf(Normal(0,10), α) + 
+    logpdf(Normal(0,10), β) + 
+    logpdf(Exponential(3), σ)
+end;
+```
+
+```{julia}
+logprior(α, β, σ)
+```
+
+The log joint is then just the sum of the log likelihood and the log prior:
+
+```{julia}
+function logjoint(α, β, σ; weights, heights) 
+    loglikelihood(α, β, σ; weights, heights) + logprior(α, β, σ)
+end;
+```
+
+```{julia}
+logjoint(α, β, σ; weights, heights)
 ```
