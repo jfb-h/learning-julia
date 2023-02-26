@@ -2,22 +2,26 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://jfb-h.github.io/learning-julia/agenda.html</loc>
-    <lastmod>2023-01-26T16:39:33.824Z</lastmod>
+    <lastmod>2023-02-26T15:22:25.928Z</lastmod>
   </url>
   <url>
     <loc>https://jfb-h.github.io/learning-julia/index.html</loc>
-    <lastmod>2023-01-26T16:39:34.325Z</lastmod>
+    <lastmod>2023-02-26T15:22:26.596Z</lastmod>
   </url>
   <url>
     <loc>https://jfb-h.github.io/learning-julia/pages/bayes/coinflip_ldp.html</loc>
-    <lastmod>2023-01-26T16:46:16.169Z</lastmod>
+    <lastmod>2023-02-26T15:28:32.504Z</lastmod>
   </url>
   <url>
     <loc>https://jfb-h.github.io/learning-julia/pages/programming_recap.html</loc>
-    <lastmod>2023-01-26T16:46:35.706Z</lastmod>
+    <lastmod>2023-02-26T15:29:06.933Z</lastmod>
   </url>
   <url>
     <loc>https://jfb-h.github.io/learning-julia/pages/statistical-rethinking/week1.html</loc>
-    <lastmod>2023-01-26T16:48:11.419Z</lastmod>
+    <lastmod>2023-02-26T15:32:30.835Z</lastmod>
+  </url>
+  <url>
+    <loc>https://jfb-h.github.io/learning-julia/pages/statistical-rethinking/week2.html</loc>
+    <lastmod>2023-02-26T15:38:46.791Z</lastmod>
   </url>
 </urlset>
