@@ -2,26 +2,30 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://jfb-h.github.io/learning-julia/agenda.html</loc>
-    <lastmod>2023-02-26T15:22:25.928Z</lastmod>
+    <lastmod>2023-03-06T13:54:43.349Z</lastmod>
   </url>
   <url>
     <loc>https://jfb-h.github.io/learning-julia/index.html</loc>
-    <lastmod>2023-02-26T15:22:26.596Z</lastmod>
+    <lastmod>2023-03-06T13:54:43.803Z</lastmod>
   </url>
   <url>
     <loc>https://jfb-h.github.io/learning-julia/pages/bayes/coinflip_ldp.html</loc>
-    <lastmod>2023-02-26T15:28:32.504Z</lastmod>
+    <lastmod>2023-03-06T14:00:53.122Z</lastmod>
   </url>
   <url>
     <loc>https://jfb-h.github.io/learning-julia/pages/programming_recap.html</loc>
-    <lastmod>2023-02-26T15:29:06.933Z</lastmod>
+    <lastmod>2023-03-06T14:01:12.653Z</lastmod>
   </url>
   <url>
-    <loc>https://jfb-h.github.io/learning-julia/pages/statistical-rethinking/week1.html</loc>
-    <lastmod>2023-02-26T15:32:30.835Z</lastmod>
+    <loc>https://jfb-h.github.io/learning-julia/pages/statistical-rethinking/week1_globe_tossing.html</loc>
+    <lastmod>2023-03-06T14:02:49.654Z</lastmod>
   </url>
   <url>
-    <loc>https://jfb-h.github.io/learning-julia/pages/statistical-rethinking/week2.html</loc>
-    <lastmod>2023-02-26T15:38:46.791Z</lastmod>
+    <loc>https://jfb-h.github.io/learning-julia/pages/statistical-rethinking/week2_categorical_data.html</loc>
+    <lastmod>2023-03-06T14:05:52.970Z</lastmod>
+  </url>
+  <url>
+    <loc>https://jfb-h.github.io/learning-julia/pages/statistical-rethinking/week2_linear_regression.html</loc>
+    <lastmod>2023-03-06T14:08:46.808Z</lastmod>
   </url>
 </urlset>
